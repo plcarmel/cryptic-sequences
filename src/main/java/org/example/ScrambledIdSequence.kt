@@ -1,13 +1,17 @@
 package org.example
 
+/*
+import org.example.encryption.definitions.FixedSizeWordEncryptionAlgo
+
 class ScrambledIdSequence(
   override val base: Int,
 
 
-): WordEncryptionAlgo {
+): FixedSizeWordEncryptionAlgo {
 
-  override fun encrypt(word: IntArray) {
+  override fun encrypt(word: IntArray, at: Int) {
     TODO("Not yet implemented")
   }
 
 }
+*/

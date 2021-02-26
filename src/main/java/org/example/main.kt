@@ -1,57 +1,44 @@
 package org.example
 
+import org.example.encryption.definitions.VariableSizeWordEncryptionAlgo
+import org.example.encryption.implementations.ShuffledTableOverlapEncryptionAlgo
+import org.example.numbers.BaseSystem.Companion.zeroPad
+import org.example.numbers.NumberRepresentationSystem.Companion.base10
 import java.lang.IllegalArgumentException
-import java.util.stream.Collectors
 import java.util.stream.Stream
 import java.util.stream.StreamSupport
 import kotlin.math.pow
 
-private val baseSystem = BaseSystem(10)
-
-private const val seed = 2L
-
-private val maskRegex = Regex("\\d+")
-
-fun randomize(algoA: ShufflingEncryptionAlgo, algoB: CesarEncryptionAlgo, tag: IntArray) {
-  algoB.encrypt(tag)
-  algoA.encrypt(tag)
-  algoB.encrypt(tag)
-}
-
-fun zeroPad(n: Int, tag: IntArray): IntArray =
-  tag + (1 .. n - tag.size).map { 0 }
+private val numberRepresentationSystem = base10
+private val baseSystem = base10.baseSystem
 
 fun nbValuesFromNbDigits(nbDigits: Int) = baseSystem.base.toDouble().pow(nbDigits).toInt()
 
-fun listValues(algoA: ShufflingEncryptionAlgo, algoB: CesarEncryptionAlgo): Stream<String> {
-  val n = algoB.mask.size
-  val max = nbValuesFromNbDigits(n)
-  return StreamSupport.stream((0 until max).spliterator(), false).map {
-    val tagDigits = zeroPad(n, baseSystem.extractDigits(it))
-    randomize(algoA, algoB, tagDigits)
-    baseSystem.fromDigits(tagDigits)
+fun listValues(nbDigits: Int, algo: VariableSizeWordEncryptionAlgo): Stream<String> {
+  val max = nbValuesFromNbDigits(nbDigits)
+  return StreamSupport.stream((0 until max).spliterator(), true).map {
+    val tagDigits = zeroPad(nbDigits, baseSystem.extractDigits(it))
+    algo.encrypt(tagDigits)
+    numberRepresentationSystem.format(tagDigits)
   }
 }
 
 fun main(args: Array<String>) {
-  if (args.size != 1)
-    throw IllegalArgumentException("Pass the mask in parameter")
-  val mask = args[0]
-  if (!maskRegex.matches(mask))
-    throw IllegalArgumentException("Invalid mask")
-  val smallCryptor = ShufflingEncryptionAlgo(baseSystem, RandomArrayEncryptionAlgo(baseSystem, wordSize=2, seed))
-  val cesarCryptor = CesarEncryptionAlgo(baseSystem.base, baseSystem.toDigits(mask))
-  val result = listValues(smallCryptor, cesarCryptor).collect(Collectors.toList())
-  val n = mask.length
+  if (args.size != 2)
+    throw IllegalArgumentException("Pass the number of digits and the key in parameter")
+  val nbDigits = args[0].toInt()
+  val key = args[1].toLong()
+  val encryptionAlgo = ShuffledTableOverlapEncryptionAlgo(baseSystem, key)
+  val result = listValues(nbDigits, encryptionAlgo)//.collect(Collectors.toList())
   // val diffResult = result.indices.map { result[(it+1) % result.size] - result[it] }.toIntArray()
+  /*
   val resultSet = result.toSet()
   result.indices.forEach {
-    val x = baseSystem.fromDigits(zeroPad(n, baseSystem.extractDigits(it)))
+    val x = numberRepresentationSystem.format(zeroPad(nbDigits, baseSystem.extractDigits(it)))
     if (!resultSet.contains(x)) {
       throw RuntimeException("Does not contain \"$x\" ($it) !")
     }
-  }
-  //diffResult.forEach(::println)
+  }*/
   result.forEach(::println)
   /*
   FileOutputStream("result.bin").use { file ->
