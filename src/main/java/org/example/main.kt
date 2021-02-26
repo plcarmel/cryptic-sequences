@@ -1,61 +1,36 @@
 package org.example
 
-import java.io.FileOutputStream
 import java.lang.IllegalArgumentException
-import java.lang.RuntimeException
-import java.util.*
+import java.util.stream.Collectors
+import java.util.stream.Stream
+import java.util.stream.StreamSupport
 import kotlin.math.pow
 
+private val baseSystem = BaseSystem(10)
 
-private const val seed = 0x12c4f99a0f80 // randomly generated
-
-private val rnd = Random(seed)
+private const val seed = 2L
 
 private val maskRegex = Regex("\\d+")
 
-private val shuffledDigits = (0..9).shuffled(rnd)
-private val shuffledDigitPairs = (0..99).shuffled(rnd)
-
-private const val zeroCode = '0'.toByte().toInt()
-
-private fun digitsOf(value: String) =
-  value.chars().map { c -> c - zeroCode }.toArray()
-
-private fun digitsToString(value: IntArray) =
-  value.map { it + zeroCode }.map { it.toByte() }.toByteArray().let { String(it) }
-
-private fun randomizeDigits(value: String) =
-  digitsOf(value).map { shuffledDigits[it] }.toIntArray().let(::digitsToString)
-
-private fun randomizeDigitPairs(value: String): String {
-  if (value.length == 1) {
-    return value
-  }
-  val digits = digitsOf(value)
-  val n = digits.size
-  digits.indices.forEach {
-    val x = shuffledDigitPairs[digits[it] * 10 + digits[(it + 1) % n]];
-    digits[it] = x / 10
-    digits[(it+1)%n] = x % 10
-  }
-  return digitsToString(digits)
+fun randomize(algoA: ShufflingEncryptionAlgo, algoB: CesarEncryptionAlgo, tag: IntArray) {
+  algoB.encrypt(tag)
+  algoA.encrypt(tag)
+  algoB.encrypt(tag)
 }
 
-fun applyMask(mask: String, value: String): String {
-  return value.indices.map { (digitsOf(value)[it] + digitsOf(mask)[it]) % 10 }.joinToString("")
-}
+fun zeroPad(n: Int, tag: IntArray): IntArray =
+  tag + (1 .. n - tag.size).map { 0 }
 
-fun randomize(mask: String, value: String): String =
-  applyMask(mask, value).let(::randomizeDigits).let { acc ->
-    (1 .. mask.length * 100).fold(acc) { v,_ -> randomizeDigitPairs(v) }
+fun nbValuesFromNbDigits(nbDigits: Int) = baseSystem.base.toDouble().pow(nbDigits).toInt()
+
+fun listValues(algoA: ShufflingEncryptionAlgo, algoB: CesarEncryptionAlgo): Stream<String> {
+  val n = algoB.mask.size
+  val max = nbValuesFromNbDigits(n)
+  return StreamSupport.stream((0 until max).spliterator(), false).map {
+    val tagDigits = zeroPad(n, baseSystem.extractDigits(it))
+    randomize(algoA, algoB, tagDigits)
+    baseSystem.fromDigits(tagDigits)
   }
-
-fun Int.toMask(n: Int) = String.format("%0${n}d", this)
-
-fun listValues(mask: String): List<String> {
-  val n = mask.length
-  val max = 10.0.pow(n.toDouble()).toInt()
-  return (0 until max).map { randomize(mask, it.toMask(n)) }
 }
 
 fun main(args: Array<String>) {
@@ -64,15 +39,26 @@ fun main(args: Array<String>) {
   val mask = args[0]
   if (!maskRegex.matches(mask))
     throw IllegalArgumentException("Invalid mask")
-  val result = listValues(mask).map(String::toInt).toIntArray()
+  val smallCryptor = ShufflingEncryptionAlgo(baseSystem, RandomArrayEncryptionAlgo(baseSystem, wordSize=2, seed))
+  val cesarCryptor = CesarEncryptionAlgo(baseSystem.base, baseSystem.toDigits(mask))
+  val result = listValues(smallCryptor, cesarCryptor).collect(Collectors.toList())
   val n = mask.length
-  val diffResult = result.indices.map { result[(it+1) % result.size] - result[it] }.toIntArray()
+  // val diffResult = result.indices.map { result[(it+1) % result.size] - result[it] }.toIntArray()
   val resultSet = result.toSet()
   result.indices.forEach {
-    if (!resultSet.contains(it)) {
-      throw RuntimeException("Does not contain $it !")
+    val x = baseSystem.fromDigits(zeroPad(n, baseSystem.extractDigits(it)))
+    if (!resultSet.contains(x)) {
+      throw RuntimeException("Does not contain \"$x\" ($it) !")
     }
   }
   //diffResult.forEach(::println)
-  FileOutputStream("result.bin").use { file -> result.forEach(file::write) }
+  result.forEach(::println)
+  /*
+  FileOutputStream("result.bin").use { file ->
+    result
+      .flatMap { x -> listOf(((x and 0xFF00) shr 8), x and 0x00FF).stream() }
+      .map(Int::toByte)
+      .forEach { file.write(arrayOf(it).toByteArray()) }
+  }
+   */
 }
