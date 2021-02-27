@@ -1,8 +1,8 @@
-package org.example.encryption.implementations
+package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import org.example.encryption.definitions.FixedSizeWordEncryptionAlgo
-import org.example.encryption.definitions.VariableSizeWordEncryptionAlgo
-import org.example.numbers.BaseSystem
+import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.definitions.VariableSizeWordEncryptionAlgo
+import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 
 /**
  * Encryption algorithm that takes an base encryption algo operating on words of fixed size and extend it so it can
@@ -17,18 +17,11 @@ import org.example.numbers.BaseSystem
  * @param baseEncryption
  *  the base encryption that will be applied repetitively throughout the word
  *
- * @param nbPasses
- *  the number of times the encryption algorithm is executed
- *  If the value is too low, the produced encrypted words will not exhibit good pseudo-random properties.
- *
  */
 class OverlapEncryptionAlgo(
-  private val baseSystem: BaseSystem,
+  override val baseSystem: BaseSystem,
   private val baseEncryption: FixedSizeWordEncryptionAlgo,
 ) : VariableSizeWordEncryptionAlgo {
-
-  override val base: Int
-    get() = baseSystem.base
 
   override fun encrypt(word: IntArray) {
       word.indices.forEach { baseEncryption.encrypt(word, it) }

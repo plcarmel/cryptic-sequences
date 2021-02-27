@@ -1,5 +1,7 @@
-package org.example.encryption.definitions
+package net.plcarmel.encryptedsequences.core.encryption.definitions
 
 interface FixedSizeWordProcessor : WordProcessor {
+
   val wordSize: Int
+
 }

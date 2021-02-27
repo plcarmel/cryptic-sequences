@@ -1,25 +1,28 @@
 plugins {
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.30'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
 }
 
-group 'org.example'
+group 'net.plcarmel'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    maven { url "https://kotlin.bintray.com/kotlinx" }
 }
 
 sourceSets {
   main.java.srcDirs += 'src/main/kotlin/'
 }
 
+dependencies {
+  implementation project(":core")
+  implementation "org.jetbrains.kotlin:kotlin-stdlib"
+  implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
+}
+
 application {
-  mainClass = 'org.example.MainKt'
+  mainClassName = 'net.plcarmel.crypticsequences.cli.MainKt'
 }
 
 build {

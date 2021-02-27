@@ -1,4 +1,4 @@
-package org.example.numbers
+package net.plcarmel.encryptedsequences.core.numbers
 
 class NumberRepresentationSystem(@Suppress("MemberVisibilityCanBePrivate") val symbols: CharArray) {
 
@@ -10,7 +10,8 @@ class NumberRepresentationSystem(@Suppress("MemberVisibilityCanBePrivate") val s
   private fun digitToSymbol(digit: Int): Char = symbols[digit]
   private fun symbolToDigit(char: Char): Int = symbolToDigitMap[char]!!
 
-  fun format(number: Int): String =
+  @Suppress("unused")
+  fun format(number: Long): String =
     baseSystem.extractDigits(number).let(::format)
 
   @Suppress("MemberVisibilityCanBePrivate")
@@ -26,25 +27,28 @@ class NumberRepresentationSystem(@Suppress("MemberVisibilityCanBePrivate") val s
     representation.toCharArray().let(::parse)
 
   @Suppress("unused")
-  fun parseToInt(representation: String): Int =
+  fun parseToLong(representation: String): Long =
     baseSystem.combineDigits(parse(representation))
 
   companion object {
 
-    private val base10symbols = ('0'..'9').toList().toCharArray()
-    private val base16symbols = (('0'..'9') + ('A'..'F')).toCharArray()
-    private val base64symbols = (('A'..'Z') + ('a'..'z') + ('0'..'9') + listOf('+','/')).toCharArray()
+    private val base32hexAlphabet = (('0'..'9') + ('A'..'V')).toCharArray()
+    private val mimeAlphabet = (('A'..'Z') + ('a'..'z') + ('0'..'9') + listOf('+','/')).toCharArray()
+    private val asciiAlphabet = (0 until 256).map(Int::toChar).toCharArray()
 
     @Suppress("unused")
-    val base8 = NumberRepresentationSystem(base10symbols.take(8).toCharArray())
+    val octal = NumberRepresentationSystem(base32hexAlphabet.take(8).toCharArray())
     @Suppress("unused")
-    val base10 = NumberRepresentationSystem(base10symbols)
+    val decimal = NumberRepresentationSystem(base32hexAlphabet.take(10).toCharArray())
     @Suppress("unused")
-    val base16 = NumberRepresentationSystem(base16symbols)
+    val hexadecimal = NumberRepresentationSystem(base32hexAlphabet.take(16).toCharArray())
     @Suppress("unused")
-    val base32 = NumberRepresentationSystem(base64symbols.take(32).toCharArray())
+    val base32hex = NumberRepresentationSystem(base32hexAlphabet)
     @Suppress("unused")
-    val base64 = NumberRepresentationSystem(base64symbols)
+    val mime64 = NumberRepresentationSystem(mimeAlphabet)
+    @Suppress("unused")
+    val ascii = NumberRepresentationSystem(asciiAlphabet)
+
   }
 
 }
