@@ -3,7 +3,8 @@ package net.plcarmel.crypticsequences.cli
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
+import net.plcarmel.encryptedsequences.core.numbers.BinaryBaseSystem
+import net.plcarmel.encryptedsequences.core.numbers.GenericBaseSystem
 import net.plcarmel.encryptedsequences.core.numbers.NumberRepresentationSystem
 import net.plcarmel.encryptedsequences.core.sequences.CrypticSequence
 import java.lang.IllegalArgumentException
@@ -11,7 +12,9 @@ import java.lang.IllegalArgumentException
 class Options(parser: ArgParser) {
 
   fun createSequence(): CrypticSequence {
-    val baseSystem = BaseSystem(base)
+    val baseSystem =
+      if (base.countOneBits() == 1) BinaryBaseSystem(base.countTrailingZeroBits())
+      else GenericBaseSystem(base)
     return CrypticSequence(
       baseSystem,
       wordSize = size,
@@ -54,7 +57,7 @@ class Options(parser: ArgParser) {
       fullName = "key",
       shortName = "k",
       description = "The 48 bits key to use to encrypt the sequence, in base 64 (up to 6 digits)."
-    ).default("0")
+    ).default("")
 
   private val start by
     parser.option(

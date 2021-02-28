@@ -19,5 +19,5 @@ class ShuffledTableOverlapEncryptionAlgo(
         baseSystem,
         ShuffledTableEncryptionAlgo(baseSystem, key)
       ),
-      { wordSize -> strength * wordSize }
+      { wordSize -> if (wordSize <= 2) 1 else strength * wordSize }
   )

@@ -2,7 +2,7 @@ package net.plcarmel.encryptedsequences.core.encryption.implementations
 
 import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
-import net.plcarmel.encryptedsequences.core.numbers.BaseSystem.Companion.zeroPad
+import net.plcarmel.encryptedsequences.core.numbers.zeroPad
 import java.util.*
 
 /**
@@ -28,17 +28,17 @@ class ShuffledTableEncryptionAlgo(
 ) : FixedSizeWordEncryptionAlgo {
 
   private val rnd = Random(key)
-  private val n = baseSystem.nbValues(wordSize)
+  private val n = baseSystem.nbValues(wordSize).toInt()
 
-  private val mainTable: LongArray = (0 until n).shuffled(rnd).toLongArray()
+  private val mainTable: IntArray = (0 until n).shuffled(rnd).toIntArray()
 
-  private fun deriveTable(smallerWordSize: Int): LongArray =
+  private fun deriveTable(smallerWordSize: Int): IntArray =
     mainTable
       .take(baseSystem.nbValues(smallerWordSize).toInt())
       .let(Companion::getOrder)
-      .toLongArray()
+      .toIntArray()
 
-  private val allTables: Map<Int, LongArray> =
+  private val allTables: Map<Int, IntArray> =
     ((1 until wordSize).map { it to deriveTable(it) } + listOf(wordSize to mainTable)).toMap()
 
   override fun encrypt(word: IntArray, at: Int) {
@@ -50,6 +50,7 @@ class ShuffledTableEncryptionAlgo(
       .let(baseSystem::combineDigits)
       .let(Long::toInt)
       .let(table::get)
+      .let(Int::toLong)
       .let(baseSystem::extractDigits)
       .let(zeroPad)
       .let(copyToArray)
@@ -57,10 +58,10 @@ class ShuffledTableEncryptionAlgo(
 
   companion object {
 
-    private fun getOrder(numbers: List<Long>): List<Long> =
+    private fun getOrder(numbers: List<Int>): List<Int> =
       numbers
         .indices
-        .map { Pair(it.toLong(), numbers[it]) }
+        .map { Pair(it, numbers[it]) }
         .sortedBy { (_, n) -> n }
         .map { (i, _) -> i }
 

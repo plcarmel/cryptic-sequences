@@ -3,6 +3,7 @@ package net.plcarmel.encryptedsequences.core.sequences
 import net.plcarmel.encryptedsequences.core.encryption.definitions.VariableSizeWordEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.encryption.implementations.ShuffledTableOverlapEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
+import net.plcarmel.encryptedsequences.core.numbers.zeroPad
 import java.util.*
 import java.util.Spliterator.*
 import java.util.function.Consumer
@@ -21,7 +22,12 @@ class CrypticSequence(
     strength: Int,
     startIndex: Long = 0,
     endIndex: Long = baseSystem.nbValues(wordSize)
-  ) : this(wordSize, ShuffledTableOverlapEncryptionAlgo(baseSystem, key, strength), startIndex, endIndex)
+  ) : this(
+    wordSize,
+    ShuffledTableOverlapEncryptionAlgo(baseSystem, key, strength),
+    startIndex,
+    endIndex
+  )
 
   private val baseSystem = encryptionAlgo.baseSystem
 
@@ -30,7 +36,7 @@ class CrypticSequence(
       return false
     }
     if (consumer != null) {
-      val result = baseSystem.extractDigits(startIndex)
+      val result = zeroPad(wordSize, baseSystem.extractDigits(startIndex))
       encryptionAlgo.encrypt(result)
       consumer.accept(result)
     }

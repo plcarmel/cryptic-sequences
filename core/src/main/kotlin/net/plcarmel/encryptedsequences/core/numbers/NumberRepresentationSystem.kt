@@ -1,9 +1,13 @@
 package net.plcarmel.encryptedsequences.core.numbers
 
-class NumberRepresentationSystem(@Suppress("MemberVisibilityCanBePrivate") val symbols: CharArray) {
+class NumberRepresentationSystem(
+  @Suppress("MemberVisibilityCanBePrivate") val symbols: CharArray
+) {
 
   @Suppress("MemberVisibilityCanBePrivate")
-  val baseSystem = BaseSystem(base = symbols.size)
+  val baseSystem =
+    if (symbols.size.countOneBits() == 1) BinaryBaseSystem(symbols.size.countTrailingZeroBits())
+    else GenericBaseSystem(symbols.size)
 
   private val symbolToDigitMap = symbols.indices.map { symbols[it] to it }.toMap()
 

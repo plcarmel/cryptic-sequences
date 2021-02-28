@@ -4,11 +4,11 @@ import net.plcarmel.encryptedsequences.core.encryption.definitions.VariableSizeW
 
 class MultiPassEncryptionAlgo(
   private val baseAlgo: VariableSizeWordEncryptionAlgo,
-  @Suppress("MemberVisibilityCanBePrivate") val nbRepetitions: (Int) -> Int
+  @Suppress("MemberVisibilityCanBePrivate") val nbPasses: (Int) -> Int
 ) : VariableSizeWordEncryptionAlgo {
 
   override fun encrypt(word: IntArray) {
-    repeat(nbRepetitions(word.size)) { baseAlgo.encrypt(word) }
+    repeat(nbPasses(word.size)) { baseAlgo.encrypt(word) }
   }
 
   override val baseSystem

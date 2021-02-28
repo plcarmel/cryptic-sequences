@@ -2,21 +2,30 @@ package net.plcarmel.crypticsequences.cli
 
 import kotlinx.cli.ArgParser
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
+import net.plcarmel.encryptedsequences.core.numbers.BinaryBaseSystem
 import net.plcarmel.encryptedsequences.core.numbers.NumberRepresentationSystem
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.io.OutputStreamWriter
-import java.lang.IllegalStateException
 
-private val base256 = BaseSystem(256)
+private val base256 = BinaryBaseSystem(8)
 
-fun printBinary(output: OutputStream, baseSystem: BaseSystem, nbBytes: Int, word: IntArray) {
+fun printBinary(
+  output: OutputStream,
+  baseSystem: BaseSystem,
+  nbBytes: Int,
+  word: IntArray
+) {
   val bytes = word.let(baseSystem::combineDigits).let(base256::extractDigits)
   val bytesPadded = (if (nbBytes > bytes.size) bytes + IntArray(nbBytes - bytes.size) else bytes)
   output.write(bytesPadded.map(Int::toByte).toByteArray(), 0, nbBytes)
 }
 
-fun printText(outputWriter: OutputStreamWriter, representationSystem: NumberRepresentationSystem, word: IntArray) {
+fun printText(
+  outputWriter: OutputStreamWriter,
+  representationSystem: NumberRepresentationSystem,
+  word: IntArray
+) {
   word.let(representationSystem::format).let(outputWriter::write)
   outputWriter.write("\n")
   outputWriter.flush()
