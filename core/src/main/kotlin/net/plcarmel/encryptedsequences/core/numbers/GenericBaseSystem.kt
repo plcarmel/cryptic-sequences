@@ -8,7 +8,7 @@ class GenericBaseSystem(override val base: Int) : BaseSystem {
     val n = target.size
     var i = start
     var w = word
-    while (w != 0L) {
+    while (w != 0L && i - start != count) {
       target[i++ % n] = (w % base).toInt()
       w /= base
     }

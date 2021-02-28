@@ -17,7 +17,7 @@ fun printBinary(
   word: IntArray
 ) {
   val bytes = IntArray(nbBytes)
-  word.let(baseSystem::combineDigitsFrom).let { base256.extractDigitsAt(bytes, it) }
+  word.let(baseSystem::combineDigitsFrom).let { base256.extractDigitsAt(bytes, it, count = nbBytes) }
   output.write(bytes.map(Int::toByte).toByteArray(), 0, nbBytes)
 }
 

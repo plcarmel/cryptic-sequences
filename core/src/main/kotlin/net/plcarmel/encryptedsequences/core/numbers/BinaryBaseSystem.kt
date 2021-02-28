@@ -9,7 +9,7 @@ class BinaryBaseSystem(private val nbBits: Int) : BaseSystem {
     val n = target.size
     var i = start
     var w = word
-    while (w != 0L) {
+    while (w != 0L && i - start != count) {
       target[i++ % n] = w.toInt() and mask
       w = w shr nbBits
     }
