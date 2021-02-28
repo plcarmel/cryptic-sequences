@@ -23,7 +23,7 @@ class GenericBaseSystem(override val base: Int) : BaseSystem {
     var m = 1L
     var s = 0L
     while(i - start != count) {
-      s += m*source[i++ % n]
+      s += m * source[i++ % n].toLong()
       m *= base
     }
     return s

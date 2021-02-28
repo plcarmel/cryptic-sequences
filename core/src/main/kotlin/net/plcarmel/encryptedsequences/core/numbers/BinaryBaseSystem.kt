@@ -24,7 +24,7 @@ class BinaryBaseSystem(private val nbBits: Int) : BaseSystem {
     var m = 0
     var s = 0L
     while(i - start != count) {
-      s += source[i++ % n] shl m
+      s += source[i++ % n].toLong() shl m
       m += nbBits
     }
     return s
