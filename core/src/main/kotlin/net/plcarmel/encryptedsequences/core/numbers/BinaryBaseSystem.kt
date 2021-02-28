@@ -30,7 +30,6 @@ class BinaryBaseSystem(private val nbBits: Int) : BaseSystem {
     return s
   }
 
-  override fun nbValues(wordSize: Int) = 1L shl wordSize
-
+  override fun nbValues(wordSize: Int) = 1L shl (nbBits * wordSize)
 
 }
