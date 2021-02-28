@@ -16,9 +16,9 @@ fun printBinary(
   nbBytes: Int,
   word: IntArray
 ) {
-  val bytes = word.let(baseSystem::combineDigits).let(base256::extractDigits)
-  val bytesPadded = (if (nbBytes > bytes.size) bytes + IntArray(nbBytes - bytes.size) else bytes)
-  output.write(bytesPadded.map(Int::toByte).toByteArray(), 0, nbBytes)
+  val bytes = IntArray(nbBytes)
+  word.let(baseSystem::combineDigitsFrom).let { base256.extractDigitsAt(bytes, it) }
+  output.write(bytes.map(Int::toByte).toByteArray(), 0, nbBytes)
 }
 
 fun printText(
@@ -41,13 +41,14 @@ fun main(args: Array<String>) {
     if (options.output == null) { body: (OutputStream) -> Unit -> body(output) }
     else output::use
   useOutput {
+    val byteCount = options.byteCount
     sequence.forEachRemaining(
-      if (options.byteCount == null ) {
+      if (byteCount == null ) {
         val outputWriter = OutputStreamWriter(output)
         val representationSystem = options.representationSystem
         { w: IntArray -> printText(outputWriter, representationSystem, w) }
       } else {
-        { w:IntArray -> printBinary(output, sequence.encryptionAlgo.baseSystem, options.byteCount!!, w) }
+          { w:IntArray -> printBinary(output, sequence.encryptionAlgo.baseSystem, byteCount, w) }
       }
     )
   }
