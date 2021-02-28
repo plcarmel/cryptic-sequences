@@ -14,10 +14,6 @@ class NumberRepresentationSystem(
   private fun digitToSymbol(digit: Int): Char = symbols[digit]
   private fun symbolToDigit(char: Char): Int = symbolToDigitMap[char]!!
 
-  @Suppress("unused")
-  fun format(number: Long): String =
-    baseSystem.extractDigits(number).let(::format)
-
   @Suppress("MemberVisibilityCanBePrivate")
   fun format(digits: IntArray): String =
     String(digits.reversed().map(::digitToSymbol).toCharArray())
@@ -32,7 +28,7 @@ class NumberRepresentationSystem(
 
   @Suppress("unused")
   fun parseToLong(representation: String): Long =
-    baseSystem.combineDigits(parse(representation))
+    baseSystem.combineDigitsFrom(parse(representation))
 
   companion object {
 

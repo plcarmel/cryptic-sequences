@@ -3,8 +3,8 @@ package net.plcarmel.encryptedsequences.core.numbers
 interface BaseSystem {
 
   val base: Int
-  fun extractDigits(word: Long): IntArray
-  fun combineDigits(digits: IntArray): Long
+  fun extractDigitsAt(target: IntArray, word: Long, start: Int = 0, count: Int = target.size)
+  fun combineDigitsFrom(source: IntArray, start: Int = 0, count: Int = source.size): Long
   fun nbValues(wordSize: Int): Long
 
 }

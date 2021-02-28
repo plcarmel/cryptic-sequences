@@ -2,7 +2,6 @@ package net.plcarmel.encryptedsequences.core.encryption.implementations
 
 import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
-import net.plcarmel.encryptedsequences.core.numbers.zeroPad
 import java.util.*
 
 /**
@@ -44,16 +43,12 @@ class ShuffledTableEncryptionAlgo(
   override fun encrypt(word: IntArray, at: Int) {
     val nbDigits = word.size.coerceAtMost(wordSize)
     val table = allTables[nbDigits]!!
-    val zeroPad = { digits: IntArray -> zeroPad(nbDigits, digits) }
-    val copyToArray = { src: IntArray -> copyToArrayAt(word, at, src) }
-    subArray(word, at, nbDigits)
-      .let(baseSystem::combineDigits)
-      .let(Long::toInt)
+    baseSystem
+      .combineDigitsFrom(word, at, nbDigits)
+      .toInt()
       .let(table::get)
-      .let(Int::toLong)
-      .let(baseSystem::extractDigits)
-      .let(zeroPad)
-      .let(copyToArray)
+      .toLong()
+      .let { baseSystem.extractDigitsAt(word, it, at, nbDigits) }
   }
 
   companion object {

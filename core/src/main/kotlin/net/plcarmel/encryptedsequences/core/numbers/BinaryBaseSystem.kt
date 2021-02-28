@@ -5,22 +5,27 @@ class BinaryBaseSystem(private val nbBits: Int) : BaseSystem {
   override val base = 1 shl nbBits
   private val mask = base-1
 
-  override fun extractDigits(word: Long): IntArray {
+  override fun extractDigitsAt(target: IntArray, word: Long, start: Int, count: Int) {
+    val n = target.size
+    var i = start
     var w = word
-    val digits = mutableListOf<Int>()
     while (w != 0L) {
-      digits.add(w.toInt() and mask)
+      target[i++ % n] = w.toInt() and mask
       w = w shr nbBits
     }
-    return digits.toIntArray()
+    while (i - start != count) {
+      target[i++ % n] = 0
+    }
   }
 
-  override fun combineDigits(digits: IntArray): Long {
+  override fun combineDigitsFrom(source: IntArray, start: Int, count: Int): Long {
+    val n = source.size
+    var i = start
     var m = 0
     var s = 0L
-    for (d in digits) {
-      s += d.toLong() shl m
-      m += nbBits
+    while(i - start != count) {
+      s += source[i++ % n] shl m
+      m *= nbBits
     }
     return s
   }
