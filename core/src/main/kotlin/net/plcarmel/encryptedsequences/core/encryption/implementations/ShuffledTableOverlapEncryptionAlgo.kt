@@ -1,23 +1,40 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import net.plcarmel.encryptedsequences.core.encryption.definitions.VariableSizeWordEncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 
 /**
-* @param strength
+* @param nbPasses
 *  controls the number of times the encryption algorithm is executed
 *  If the value is too low, the produced encrypted words will not exhibit good randomness properties.
 */
 class ShuffledTableOverlapEncryptionAlgo(
-  baseSystem: BaseSystem,
+  override val baseSystem: BaseSystem,
   key: Long,
-  strength: Int = 10
-) : VariableSizeWordEncryptionAlgo
-  by
-  MultiPassEncryptionAlgo(
-      OverlapEncryptionAlgo(
-        baseSystem,
-        ShuffledTableEncryptionAlgo(baseSystem, key)
-      ),
-      { wordSize -> if (wordSize <= 2) 1 else strength * wordSize }
-  )
+  override val wordSize: Int,
+  nbPasses: Int = 10
+) : FixedSizeWordEncryptionAlgo {
+
+  private val algo: FixedSizeWordEncryptionAlgo
+
+  init {
+    val shuffledTableAlgo = ShuffledTableEncryptionAlgo(baseSystem, key)
+    algo =
+      if (shuffledTableAlgo.wordSize >= wordSize)
+        shuffledTableAlgo
+      else
+        MultiPassEncryptionAlgo(
+          OverlapEncryptionAlgo(
+            baseSystem,
+            shuffledTableAlgo,
+            wordSize
+          ),
+          nbPasses
+        )
+  }
+
+  override fun encrypt(word: IntArray, at: Int) {
+    return algo.encrypt(word, at)
+  }
+
+}

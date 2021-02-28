@@ -1,7 +1,6 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
 import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
-import net.plcarmel.encryptedsequences.core.encryption.definitions.VariableSizeWordEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 
 /**
@@ -21,9 +20,12 @@ import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 class OverlapEncryptionAlgo(
   override val baseSystem: BaseSystem,
   private val baseEncryption: FixedSizeWordEncryptionAlgo,
-) : VariableSizeWordEncryptionAlgo {
+  override val wordSize: Int
+) : FixedSizeWordEncryptionAlgo {
 
-  override fun encrypt(word: IntArray) {
-      word.indices.forEach { baseEncryption.encrypt(word, it) }
+  private val n = (1 + wordSize - baseEncryption.wordSize).coerceAtLeast(1)
+
+  override fun encrypt(word: IntArray, at: Int) {
+    (at until (at + n)).forEach { baseEncryption.encrypt(word, it) }
   }
 }

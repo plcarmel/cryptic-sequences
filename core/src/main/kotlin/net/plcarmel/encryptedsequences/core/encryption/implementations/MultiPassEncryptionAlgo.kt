@@ -1,14 +1,17 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import net.plcarmel.encryptedsequences.core.encryption.definitions.VariableSizeWordEncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
 
 class MultiPassEncryptionAlgo(
-  private val baseAlgo: VariableSizeWordEncryptionAlgo,
-  @Suppress("MemberVisibilityCanBePrivate") val nbPasses: (Int) -> Int
-) : VariableSizeWordEncryptionAlgo {
+  private val baseAlgo: FixedSizeWordEncryptionAlgo,
+  @Suppress("MemberVisibilityCanBePrivate") val nbPasses: Int
+) : FixedSizeWordEncryptionAlgo {
 
-  override fun encrypt(word: IntArray) {
-    repeat(nbPasses(word.size)) { baseAlgo.encrypt(word) }
+  override val wordSize: Int
+    get() = baseAlgo.wordSize
+
+  override fun encrypt(word: IntArray, at: Int) {
+    repeat(nbPasses) { baseAlgo.encrypt(word, at) }
   }
 
   override val baseSystem

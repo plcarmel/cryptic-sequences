@@ -37,6 +37,8 @@ class NumberRepresentationSystem(
     private val asciiAlphabet = (0 until 256).map(Int::toChar).toCharArray()
 
     @Suppress("unused")
+    val binary = NumberRepresentationSystem(base32hexAlphabet.take(2).toCharArray())
+    @Suppress("unused")
     val octal = NumberRepresentationSystem(base32hexAlphabet.take(8).toCharArray())
     @Suppress("unused")
     val decimal = NumberRepresentationSystem(base32hexAlphabet.take(10).toCharArray())

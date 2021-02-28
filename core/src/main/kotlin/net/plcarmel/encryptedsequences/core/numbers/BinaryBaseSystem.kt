@@ -25,12 +25,12 @@ class BinaryBaseSystem(private val nbBits: Int) : BaseSystem {
     var s = 0L
     while(i - start != count) {
       s += source[i++ % n] shl m
-      m *= nbBits
+      m += nbBits
     }
     return s
   }
 
-  override fun nbValues(wordSize: Int) = 1L shl (wordSize shl 2)
+  override fun nbValues(wordSize: Int) = 1L shl wordSize
 
 
 }

@@ -19,15 +19,16 @@ class Options(parser: ArgParser) {
       baseSystem,
       wordSize = size,
       key = NumberRepresentationSystem.mime64.parseToLong(key),
-      strength = strength,
+      nbPasses = strength,
       startIndex = start.toLong(),
-      endIndex = count?.let { start.toLong() + it.toLong() } ?: baseSystem.nbValues(size)
+      count = count?.toLong() ?: baseSystem.nbValues(size)
     )
   }
 
   val representationSystem
     get() =
       when (base) {
+        2 -> NumberRepresentationSystem.binary
         8 -> NumberRepresentationSystem.octal
         10 -> NumberRepresentationSystem.decimal
         16 -> NumberRepresentationSystem.hexadecimal
