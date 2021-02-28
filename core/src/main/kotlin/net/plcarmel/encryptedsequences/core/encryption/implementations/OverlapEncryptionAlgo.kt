@@ -25,7 +25,7 @@ class OverlapEncryptionAlgo(
 
   private val n = (1 + wordSize - baseEncryption.wordSize).coerceAtLeast(1)
 
-  override fun encrypt(word: IntArray, at: Int) {
+  override fun encrypt(word: ByteArray, at: Int) {
     (at until (at + n)).forEach { baseEncryption.encrypt(word, it) }
   }
 }

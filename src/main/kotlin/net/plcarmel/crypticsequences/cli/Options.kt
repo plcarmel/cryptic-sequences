@@ -6,16 +6,16 @@ import kotlinx.cli.default
 import net.plcarmel.encryptedsequences.core.numbers.BinaryBaseSystem
 import net.plcarmel.encryptedsequences.core.numbers.GenericBaseSystem
 import net.plcarmel.encryptedsequences.core.numbers.NumberRepresentationSystem
-import net.plcarmel.encryptedsequences.core.sequences.CrypticSequence
+import net.plcarmel.encryptedsequences.core.sequences.CrypticIterator
 import java.lang.IllegalArgumentException
 
 class Options(parser: ArgParser) {
 
-  fun createSequence(): CrypticSequence {
+  fun createIterator(): CrypticIterator {
     val baseSystem =
       if (base.countOneBits() == 1) BinaryBaseSystem(base.countTrailingZeroBits())
       else GenericBaseSystem(base)
-    return CrypticSequence(
+    return CrypticIterator(
       baseSystem,
       wordSize = size,
       key = NumberRepresentationSystem.mime64.parseToLong(key),
@@ -40,7 +40,6 @@ class Options(parser: ArgParser) {
     parser.option(
         ArgType.Int,
       fullName = "base",
-      shortName = "b",
       description = "The base to use for generated values."
     ).default(10)
 
@@ -48,7 +47,6 @@ class Options(parser: ArgParser) {
     parser.option(
         ArgType.Int,
       fullName = "size",
-      shortName = "s",
       description = "The number of digits each generated value should have."
     ).default(3)
 
@@ -56,7 +54,6 @@ class Options(parser: ArgParser) {
     parser.option(
         ArgType.String,
       fullName = "key",
-      shortName = "k",
       description = "The 48 bits key to use to encrypt the sequence, in base 64 (up to 6 digits)."
     ).default("")
 
@@ -64,7 +61,6 @@ class Options(parser: ArgParser) {
     parser.option(
         ArgType.Int,
       fullName = "start",
-      shortName = "a",
       description = "The index from which to start in the sequence."
     ).default(0)
 
@@ -72,7 +68,6 @@ class Options(parser: ArgParser) {
     parser.option(
         ArgType.Int,
       fullName = "strength",
-      shortName = "r",
       description = "Controls the number of time the encryption algorithm is applied."
     ).default(10)
 
@@ -80,7 +75,6 @@ class Options(parser: ArgParser) {
     parser.option(
         ArgType.Int,
       fullName = "count",
-      shortName = "c",
       description = "The number of generated values."
     )
 
@@ -88,9 +82,17 @@ class Options(parser: ArgParser) {
     parser.option(
         ArgType.Int,
       fullName = "byte-count",
-      shortName = "x",
       description = "Output values in binary mode, using \"x\" bytes for each number, truncating them if necessary."
     )
+
+  val blockSize by
+  parser.option(
+    ArgType.Int,
+    fullName = "block-size",
+    description =
+      "Block size in values (not in bytes). When option \"byte-count\" is present and output is binary, this options" +
+      "allows to speed-up output by writing multiple values at a time."
+  ).default(1024)
 
   val output by
     parser.option(

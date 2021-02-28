@@ -1,30 +1,17 @@
 package net.plcarmel.crypticsequences.cli
 
 import kotlinx.cli.ArgParser
-import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
-import net.plcarmel.encryptedsequences.core.numbers.BinaryBaseSystem
 import net.plcarmel.encryptedsequences.core.numbers.NumberRepresentationSystem
+import net.plcarmel.encryptedsequences.core.sequences.CrypticBinaryBlockIterator
+import net.plcarmel.encryptedsequences.core.sequences.CrypticLongIterator
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.io.OutputStreamWriter
 
-private val base256 = BinaryBaseSystem(8)
-
-fun printBinary(
-  output: OutputStream,
-  baseSystem: BaseSystem,
-  nbBytes: Int,
-  word: IntArray
-) {
-  val bytes = IntArray(nbBytes)
-  word.let(baseSystem::combineDigitsFrom).let { base256.extractDigitsAt(bytes, it, count = nbBytes) }
-  output.write(bytes.map(Int::toByte).toByteArray(), 0, nbBytes)
-}
-
 fun printText(
   outputWriter: OutputStreamWriter,
   representationSystem: NumberRepresentationSystem,
-  word: IntArray
+  word: ByteArray
 ) {
   word.let(representationSystem::format).let(outputWriter::write)
   outputWriter.write("\n")
@@ -35,21 +22,23 @@ fun main(args: Array<String>) {
   val parser = ArgParser("cryptic-sequences-cli")
   val options = Options(parser)
   parser.parse(args)
-  val sequence = options.createSequence()
+  val iterator = options.createIterator()
   val output = options.output?.let(::FileOutputStream) ?: System.out
   val useOutput =
     if (options.output == null) { body: (OutputStream) -> Unit -> body(output) }
     else output::use
+  val byteCount = options.byteCount
   useOutput {
-    val byteCount = options.byteCount
-    sequence.forEachRemaining(
-      if (byteCount == null ) {
-        val outputWriter = OutputStreamWriter(output)
-        val representationSystem = options.representationSystem
-        { w: IntArray -> printText(outputWriter, representationSystem, w) }
-      } else {
-          { w:IntArray -> printBinary(output, sequence.encryptionAlgo.baseSystem, byteCount, w) }
-      }
-    )
+    if (byteCount == null ) {
+      val outputWriter = OutputStreamWriter(output)
+      val representationSystem = options.representationSystem
+      iterator.forEach { w -> printText(outputWriter, representationSystem, w) }
+    } else {
+      CrypticBinaryBlockIterator(
+        CrypticLongIterator(iterator),
+        byteCount,
+        options.blockSize
+      ).forEach(output::write)
+    }
   }
 }

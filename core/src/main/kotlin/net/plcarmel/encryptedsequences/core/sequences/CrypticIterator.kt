@@ -3,19 +3,12 @@ package net.plcarmel.encryptedsequences.core.sequences
 import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.encryption.implementations.ShuffledTableOverlapEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
-import java.util.*
-import java.util.Spliterator.*
-import java.util.function.Consumer
 
-class CrypticSequence(
+class CrypticIterator(
   val encryptionAlgo: FixedSizeWordEncryptionAlgo,
   private var startIndex: Long = 0,
   private var count: Long = encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize)
-): Spliterator<IntArray> {
-
-  init {
-    count = count.coerceAtMost(encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize))
-  }
+): Iterator<ByteArray> {
 
   constructor(
     baseSystem: BaseSystem,
@@ -29,35 +22,23 @@ class CrypticSequence(
     startIndex,
     count
   )
+  init {
+    count = count.coerceAtMost(encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize))
+  }
 
   private val baseSystem = encryptionAlgo.baseSystem
   private val wordSize = encryptionAlgo.wordSize
 
-  override fun tryAdvance(consumer: Consumer<in IntArray>?): Boolean {
-    if (count == 0L) {
-      return false
-    }
-    if (consumer != null) {
-      val result = IntArray(size = wordSize)
-      baseSystem.extractDigitsAt(result, startIndex, 0, wordSize)
-      encryptionAlgo.encrypt(result)
-      consumer.accept(result)
-    }
+  override fun hasNext(): Boolean {
+    return count != 0L
+  }
+
+  override fun next(): ByteArray {
+    val result = ByteArray(size = wordSize)
+    baseSystem.extractDigitsAt(result, startIndex, 0, wordSize)
+    encryptionAlgo.encrypt(result)
     startIndex++
     count--
-    return true
+    return result
   }
-
-  override fun trySplit(): Spliterator<IntArray>? {
-    return null
-  }
-
-  override fun estimateSize(): Long {
-    return count
-  }
-
-  override fun characteristics(): Int {
-    return SIZED or SUBSIZED or DISTINCT or IMMUTABLE or NONNULL or ORDERED
-  }
-
 }

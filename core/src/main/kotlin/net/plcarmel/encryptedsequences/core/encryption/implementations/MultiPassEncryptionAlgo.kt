@@ -10,7 +10,7 @@ class MultiPassEncryptionAlgo(
   override val wordSize: Int
     get() = baseAlgo.wordSize
 
-  override fun encrypt(word: IntArray, at: Int) {
+  override fun encrypt(word: ByteArray, at: Int) {
     repeat(nbPasses) { baseAlgo.encrypt(word, at) }
   }
 

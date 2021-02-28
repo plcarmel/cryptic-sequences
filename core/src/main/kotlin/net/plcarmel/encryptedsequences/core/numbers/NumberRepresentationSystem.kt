@@ -9,21 +9,21 @@ class NumberRepresentationSystem(
     if (symbols.size.countOneBits() == 1) BinaryBaseSystem(symbols.size.countTrailingZeroBits())
     else GenericBaseSystem(symbols.size)
 
-  private val symbolToDigitMap = symbols.indices.map { symbols[it] to it }.toMap()
+  private val symbolToDigitMap = symbols.indices.map { symbols[it] to it.toByte() }.toMap()
 
   private fun digitToSymbol(digit: Int): Char = symbols[digit]
-  private fun symbolToDigit(char: Char): Int = symbolToDigitMap[char]!!
+  private fun symbolToDigit(char: Char): Byte = symbolToDigitMap[char]!!
 
   @Suppress("MemberVisibilityCanBePrivate")
-  fun format(digits: IntArray): String =
-    String(digits.reversed().map(::digitToSymbol).toCharArray())
+  fun format(digits: ByteArray): String =
+    String(digits.reversed().map(Byte::toInt).map(::digitToSymbol).toCharArray())
 
   @Suppress("MemberVisibilityCanBePrivate")
-  fun parse(representation: CharArray): IntArray =
-    representation.map(::symbolToDigit).reversed().toIntArray()
+  fun parse(representation: CharArray): ByteArray =
+    representation.map(::symbolToDigit).reversed().toByteArray()
 
   @Suppress("MemberVisibilityCanBePrivate")
-  fun parse(representation: String): IntArray =
+  fun parse(representation: String): ByteArray =
     representation.toCharArray().let(::parse)
 
   @Suppress("unused")

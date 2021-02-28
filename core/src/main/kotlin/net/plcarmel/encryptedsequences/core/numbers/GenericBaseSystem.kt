@@ -4,26 +4,24 @@ import kotlin.math.pow
 
 class GenericBaseSystem(override val base: Int) : BaseSystem {
 
-  override fun extractDigitsAt(target: IntArray, word: Long, start: Int, count: Int) {
-    val n = target.size
+  override fun extractDigitsAt(target: ByteArray, word: Long, start: Int, count: Int) {
     var i = start
     var w = word
     while (w != 0L && i - start != count) {
-      target[i++ % n] = (w % base).toInt()
+      target[i++] = (w % base).toByte()
       w /= base
     }
     while (i - start != count) {
-      target[i++ % n] = 0
+      target[i++] = 0
     }
   }
 
-  override fun combineDigitsFrom(source: IntArray, start: Int, count: Int): Long {
-    val n = source.size
+  override fun combineDigitsFrom(source: ByteArray, start: Int, count: Int): Long {
     var i = start
     var m = 1L
     var s = 0L
     while(i - start != count) {
-      s += m * source[i++ % n].toLong()
+      s += m * source[i++].toLong()
       m *= base
     }
     return s

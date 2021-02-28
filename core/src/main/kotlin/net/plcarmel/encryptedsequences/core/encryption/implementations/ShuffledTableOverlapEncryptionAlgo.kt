@@ -33,7 +33,7 @@ class ShuffledTableOverlapEncryptionAlgo(
         )
   }
 
-  override fun encrypt(word: IntArray, at: Int) {
+  override fun encrypt(word: ByteArray, at: Int) {
     return algo.encrypt(word, at)
   }
 
