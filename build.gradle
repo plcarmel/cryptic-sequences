@@ -1,14 +1,15 @@
 plugins {
-    id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
+  id 'application'
+  id 'org.jetbrains.kotlin.jvm' version '1.4.31'
+  id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 group 'net.plcarmel'
 version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
-    maven { url "https://kotlin.bintray.com/kotlinx" }
+  mavenCentral()
+  maven { url "https://kotlin.bintray.com/kotlinx" }
 }
 
 sourceSets {

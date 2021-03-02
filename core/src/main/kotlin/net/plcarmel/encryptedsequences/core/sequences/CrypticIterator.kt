@@ -1,7 +1,7 @@
 package net.plcarmel.encryptedsequences.core.sequences
 
 import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
-import net.plcarmel.encryptedsequences.core.encryption.implementations.ShuffledTableOverlapEncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.implementations.SomeSimpleEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 
 class CrypticIterator(
@@ -18,7 +18,7 @@ class CrypticIterator(
     startIndex: Long = 0,
     count: Long = baseSystem.nbValues(wordSize)
   ) : this(
-    ShuffledTableOverlapEncryptionAlgo(baseSystem, key = key,  wordSize = wordSize, nbPasses = nbPasses),
+    SomeSimpleEncryptionAlgo(baseSystem, key = key,  wordSize = wordSize, nbPasses = nbPasses),
     startIndex,
     count
   )

@@ -34,15 +34,15 @@ class ShuffledTableEncryptionAlgo(
   private val n = baseSystem.nbValues(wordSize).toInt()
 
   // Fisher-Yates shuffle
-  private val mainTable: ByteArray = (0 until n).shuffled(rnd).map(Int::toByte).toByteArray()
+  private val mainTable: IntArray = (0 until n).shuffled(rnd).toIntArray()
 
-  private fun deriveTable(smallerWordSize: Int): ByteArray =
+  private fun deriveTable(smallerWordSize: Int): IntArray =
     mainTable
       .take(baseSystem.nbValues(smallerWordSize).toInt())
       .let(Companion::getOrder)
-      .toByteArray()
+      .toIntArray()
 
-  private val allTables: Map<Int, ByteArray> =
+  private val allTables: Map<Int, IntArray> =
     ((1 until wordSize).map { it to deriveTable(it) } + listOf(wordSize to mainTable)).toMap()
 
   override fun encrypt(word: ByteArray, at: Int) {
@@ -58,12 +58,12 @@ class ShuffledTableEncryptionAlgo(
 
   companion object {
 
-    private fun getOrder(numbers: List<Byte>): List<Byte> =
+    private fun getOrder(numbers: List<Int>): List<Int> =
       numbers
         .indices
         .map { Pair(it, numbers[it]) }
         .sortedBy { (_, n) -> n }
-        .map { (i, _) -> i.toByte() }
+        .map { (i, _) -> i }
 
   }
 }

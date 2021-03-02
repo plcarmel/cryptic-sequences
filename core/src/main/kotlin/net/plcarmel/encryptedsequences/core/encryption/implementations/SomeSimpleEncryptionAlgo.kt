@@ -8,7 +8,7 @@ import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 *  controls the number of times the encryption algorithm is executed
 *  If the value is too low, the produced encrypted words will not exhibit good randomness properties.
 */
-class ShuffledTableOverlapEncryptionAlgo(
+class SomeSimpleEncryptionAlgo(
   override val baseSystem: BaseSystem,
   key: Long,
   override val wordSize: Int,
@@ -24,10 +24,12 @@ class ShuffledTableOverlapEncryptionAlgo(
         shuffledTableAlgo
       else
         MultiPassEncryptionAlgo(
-          OverlapEncryptionAlgo(
-            baseSystem,
-            shuffledTableAlgo,
-            wordSize
+          CombineEncryptionAlgo(
+            listOf(
+              OverlapEncryptionAlgo(baseSystem, shuffledTableAlgo, wordSize),
+              ReverseEncryptionAlgo(wordSize, baseSystem),
+              RotateEncryptionAlgo(wordSize, baseSystem)
+            )
           ),
           nbPasses
         )
