@@ -9,12 +9,8 @@ class ReverseEncryptionAlgo(
 ) : FixedSizeWordEncryptionAlgo {
 
   override fun encrypt(word: ByteArray, at: Int) {
-    encrypt(word, at, wordSize)
-  }
-
-  fun encrypt(word: ByteArray, at: Int, n: Int) {
-    for (i in at until at + (n / 2)) {
-      swap(word, i, at + n - 1 - i )
+    for (i in 0 until wordSize / 2) {
+      swap(word, at + i, at + wordSize - 1 - i)
     }
   }
 

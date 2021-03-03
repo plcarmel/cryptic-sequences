@@ -18,8 +18,9 @@ sourceSets {
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib"
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+  testCompile("org.junit.jupiter:junit-jupiter-params:5.7.0")
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.8.0'
 }
 
