@@ -1,9 +1,8 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
-import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
+import net.plcarmel.encryptedsequences.core.encryption.definitions.EncryptionAlgo
 
-class CombineEncryptionAlgo(val list: List<FixedSizeWordEncryptionAlgo>) : FixedSizeWordEncryptionAlgo {
+class CombineEncryptionAlgo(private val list: List<EncryptionAlgo>) : EncryptionAlgo {
 
   override fun encrypt(word: ByteArray, at: Int) {
     for (it in list) {
@@ -12,5 +11,4 @@ class CombineEncryptionAlgo(val list: List<FixedSizeWordEncryptionAlgo>) : Fixed
   }
 
   override val wordSize: Int = list[0].wordSize
-  override val baseSystem: BaseSystem = list[0].baseSystem
 }

@@ -1,12 +1,8 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
-import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
+import net.plcarmel.encryptedsequences.core.encryption.definitions.EncryptionAlgo
 
-class RotateEncryptionAlgo(
-  override val wordSize: Int,
-  override val baseSystem: BaseSystem
-) : FixedSizeWordEncryptionAlgo {
+class RotateEncryptionAlgo(override val wordSize: Int) : EncryptionAlgo {
 
   override fun encrypt(word: ByteArray, at: Int) {
     val first = word[at]

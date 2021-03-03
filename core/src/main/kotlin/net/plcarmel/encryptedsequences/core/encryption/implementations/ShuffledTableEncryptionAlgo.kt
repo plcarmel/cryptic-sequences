@@ -1,6 +1,8 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.definitions.EncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.definitions.NeedBaseSystem
+import net.plcarmel.encryptedsequences.core.encryption.definitions.NumberBasedEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 import java.util.*
 import kotlin.math.ln
@@ -28,7 +30,7 @@ class ShuffledTableEncryptionAlgo(
   override val baseSystem: BaseSystem,
   @Suppress("MemberVisibilityCanBePrivate") val key: Long, // 48 bits
   override val wordSize: Int = (ln(256.0)/ln(baseSystem.base.toDouble())).roundToInt().coerceAtLeast(2)
-) : FixedSizeWordEncryptionAlgo {
+) : NumberBasedEncryptionAlgo {
 
   private val rnd = Random(key)
   private val n = baseSystem.nbValues(wordSize).toInt()

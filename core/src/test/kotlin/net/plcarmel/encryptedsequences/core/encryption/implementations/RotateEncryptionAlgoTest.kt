@@ -1,16 +1,10 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import org.mockito.Mockito.mock
 
 internal class RotateEncryptionAlgoTest {
-
-  companion object {
-    private val baseSystem: BaseSystem = mock(BaseSystem::class.java)
-  }
 
   @ParameterizedTest
   @CsvSource(
@@ -24,7 +18,7 @@ internal class RotateEncryptionAlgoTest {
   )
   fun when_valid_arguments_expected_result(input: String, at: Int, count: Int, expected: String) {
     val bytes = input.toByteArray()
-    RotateEncryptionAlgo(count, baseSystem).encrypt(bytes, at)
+    RotateEncryptionAlgo(count).encrypt(bytes, at)
     assertEquals(expected, String(bytes))
   }
 }

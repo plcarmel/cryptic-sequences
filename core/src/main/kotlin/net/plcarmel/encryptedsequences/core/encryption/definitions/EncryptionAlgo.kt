@@ -1,6 +1,6 @@
 package net.plcarmel.encryptedsequences.core.encryption.definitions
 
-interface FixedSizeWordEncryptionAlgo : FixedSizeWordProcessor {
+interface EncryptionAlgo : NeedWordSize {
 
   fun encrypt(word: ByteArray, at: Int = 0)
 

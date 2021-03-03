@@ -1,6 +1,7 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.definitions.EncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.definitions.NumberBasedEncryptionAlgo
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 
 /**
@@ -9,13 +10,13 @@ import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 *  If the value is too low, the produced encrypted words will not exhibit good randomness properties.
 */
 class SomeSimpleEncryptionAlgo(
+  override val wordSize: Int,
   override val baseSystem: BaseSystem,
   key: Long,
-  override val wordSize: Int,
   nbPasses: Int = 10
-) : FixedSizeWordEncryptionAlgo {
+) : NumberBasedEncryptionAlgo {
 
-  private val algo: FixedSizeWordEncryptionAlgo
+  private val algo: EncryptionAlgo
 
   init {
     val shuffledTableAlgo = ShuffledTableEncryptionAlgo(baseSystem, key)
@@ -26,9 +27,9 @@ class SomeSimpleEncryptionAlgo(
         MultiPassEncryptionAlgo(
           CombineEncryptionAlgo(
             listOf(
-              OverlapEncryptionAlgo(baseSystem, shuffledTableAlgo, wordSize),
-              ReverseEncryptionAlgo(wordSize, baseSystem),
-              RotateEncryptionAlgo(wordSize, baseSystem)
+              OverlapEncryptionAlgo(wordSize, shuffledTableAlgo),
+              ReverseEncryptionAlgo(wordSize),
+              RotateEncryptionAlgo(wordSize)
             )
           ),
           nbPasses

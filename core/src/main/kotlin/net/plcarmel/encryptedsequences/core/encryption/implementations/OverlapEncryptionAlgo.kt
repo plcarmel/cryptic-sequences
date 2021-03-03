@@ -1,7 +1,6 @@
 package net.plcarmel.encryptedsequences.core.encryption.implementations
 
-import net.plcarmel.encryptedsequences.core.encryption.definitions.FixedSizeWordEncryptionAlgo
-import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
+import net.plcarmel.encryptedsequences.core.encryption.definitions.EncryptionAlgo
 
 /**
  * Encryption algorithm that takes an base encryption algo operating on words of fixed size and extend it so it can
@@ -10,18 +9,14 @@ import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
  *
  * Note: Please do NOT use this to encrypt sensitive data as this is not a real vetted encryption algorithm !
  *
- * @param baseSystem
- *  the base of the digits to encrypt
- *
  * @param baseEncryption
  *  the base encryption that will be applied repetitively throughout the word
  *
  */
 class OverlapEncryptionAlgo(
-  override val baseSystem: BaseSystem,
-  private val baseEncryption: FixedSizeWordEncryptionAlgo,
-  override val wordSize: Int
-) : FixedSizeWordEncryptionAlgo {
+  override val wordSize: Int,
+  private val baseEncryption: EncryptionAlgo
+) : EncryptionAlgo {
 
   private val n = (1 + wordSize - baseEncryption.wordSize).coerceAtLeast(1)
 
