@@ -24,7 +24,7 @@ class CrypticIterator(
   )
 
   init {
-    count = count.coerceAtMost(encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize))
+    count = count.coerceAtMost(encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize) - startIndex)
   }
 
   private val baseSystem = encryptionAlgo.baseSystem
