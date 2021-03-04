@@ -6,8 +6,8 @@ import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 
 class CrypticIterator(
   val encryptionAlgo: NumberBasedEncryptionAlgo,
-  private var startIndex: Long = 0,
-  private var count: Long = encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize)
+  var currentIndex: Long = 0,
+  var count: Long = encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize)
 ): Iterator<ByteArray> {
 
   constructor(
@@ -24,7 +24,10 @@ class CrypticIterator(
   )
 
   init {
-    count = count.coerceAtMost(encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize) - startIndex)
+    count =
+      count
+        .coerceAtMost(encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize) - currentIndex)
+        .coerceAtLeast(0)
   }
 
   private val baseSystem = encryptionAlgo.baseSystem
@@ -35,10 +38,11 @@ class CrypticIterator(
   }
 
   override fun next(): ByteArray {
+    if (count == 0L) throw NoSuchElementException()
     val result = ByteArray(size = wordSize)
-    baseSystem.extractDigitsAt(result, startIndex, 0, wordSize)
+    baseSystem.extractDigitsAt(result, currentIndex, 0, wordSize)
     encryptionAlgo.encrypt(result)
-    startIndex++
+    currentIndex++
     count--
     return result
   }
