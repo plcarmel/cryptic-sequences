@@ -16,7 +16,7 @@ internal class RotateEncryptionAlgoTest {
     " 1234567890, 0,  3, 2314567890",
     " 1234567890, 7,  3, 1234567908"
   )
-  fun when_valid_arguments_expected_result(input: String, at: Int, count: Int, expected: String) {
+  fun when_valid_arguments_then_expected_result(input: String, at: Int, count: Int, expected: String) {
     val bytes = input.toByteArray()
     RotateEncryptionAlgo(count).encrypt(bytes, at)
     assertEquals(expected, String(bytes))

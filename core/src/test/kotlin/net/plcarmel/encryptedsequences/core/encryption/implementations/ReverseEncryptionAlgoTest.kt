@@ -16,7 +16,7 @@ internal class ReverseEncryptionAlgoTest {
     " 1234567890, 0,  3, 3214567890",
     " 1234567890, 7,  3, 1234567098"
   )
-  fun when_valid_arguments_expected_result(input: String, at: Int, count: Int, expected: String) {
+  fun when_valid_arguments_then_expected_result(input: String, at: Int, count: Int, expected: String) {
     val bytes = input.toByteArray()
     ReverseEncryptionAlgo(count).encrypt(bytes, at)
     assertEquals(expected, String(bytes))
