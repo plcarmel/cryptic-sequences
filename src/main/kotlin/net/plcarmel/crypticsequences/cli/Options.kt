@@ -3,10 +3,10 @@ package net.plcarmel.crypticsequences.cli
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import net.plcarmel.encryptedsequences.core.numbers.BinaryBaseSystem
-import net.plcarmel.encryptedsequences.core.numbers.GenericBaseSystem
-import net.plcarmel.encryptedsequences.core.numbers.NumberRepresentationSystem
-import net.plcarmel.encryptedsequences.core.sequences.CrypticIterator
+import net.plcarmel.crypticsequences.core.numbers.BinaryBaseSystem
+import net.plcarmel.crypticsequences.core.numbers.GenericBaseSystem
+import net.plcarmel.crypticsequences.core.numbers.NumberRepresentationSystem
+import net.plcarmel.crypticsequences.core.sequences.CrypticIterator
 import java.lang.IllegalArgumentException
 
 class Options(parser: ArgParser) {

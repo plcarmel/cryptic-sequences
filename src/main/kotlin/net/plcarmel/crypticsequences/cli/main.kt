@@ -1,9 +1,9 @@
 package net.plcarmel.crypticsequences.cli
 
 import kotlinx.cli.ArgParser
-import net.plcarmel.encryptedsequences.core.numbers.NumberRepresentationSystem
-import net.plcarmel.encryptedsequences.core.sequences.CrypticBinaryBlockIterator
-import net.plcarmel.encryptedsequences.core.sequences.CrypticLongIterator
+import net.plcarmel.crypticsequences.core.numbers.NumberRepresentationSystem
+import net.plcarmel.crypticsequences.core.sequences.CrypticBinaryBlockIterator
+import net.plcarmel.crypticsequences.core.sequences.CrypticLongIterator
 import java.io.*
 
 fun printText(
