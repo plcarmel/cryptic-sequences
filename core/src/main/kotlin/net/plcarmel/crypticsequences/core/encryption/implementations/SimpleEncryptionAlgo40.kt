@@ -9,7 +9,7 @@ import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 *  controls the number of times the encryption algorithm is executed
 *  If the value is too low, the produced encrypted words will not exhibit good randomness properties.
 */
-class SimpleEncryptionAlgo1(
+class SimpleEncryptionAlgo40(
   override val wordSize: Int,
   override val baseSystem: BaseSystem,
   key: Long,
