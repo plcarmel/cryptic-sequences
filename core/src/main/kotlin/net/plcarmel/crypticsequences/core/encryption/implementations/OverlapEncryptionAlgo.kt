@@ -24,8 +24,8 @@ class OverlapEncryptionAlgo(
     for (it in at until (at + n)) {
       baseEncryption.encrypt(word, it)
     }
-    for (it in at until (at + n - 1)) {
-      baseEncryption.encrypt(word, at + n - 2 - it)
+    for (it in (at + n - 2) downTo at) {
+      baseEncryption.encrypt(word, it)
     }
   }
 }

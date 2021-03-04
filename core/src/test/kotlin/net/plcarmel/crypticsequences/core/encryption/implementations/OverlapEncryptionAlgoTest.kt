@@ -11,9 +11,9 @@ class OverlapEncryptionAlgoTest {
   @CsvSource(
     "   x, 0, 1, 0,  ,  ,  ,  ",
     "  xx, 0, 2, 0,  ,  ,  ,  ",
-    " xxx, 0, 2, 0, 1, 0,  ,  ",
-    "xxxx, 0, 2, 0, 1, 2, 1, 0",
-    "xxxx, 1, 2, 1, 2, 1, 0,  "
+    " xxx, 0, 3, 0, 1, 0,  ,  ",
+    "xxxx, 0, 4, 0, 1, 2, 1, 0",
+    "xxxx, 1, 3, 1, 2, 1,  ,  "
   )
   fun when_valid_arguments_then_expected_result(
     input: String,
@@ -26,6 +26,7 @@ class OverlapEncryptionAlgoTest {
     at5: Int?
   ) {
     val baseAlgo = mock(EncryptionAlgo::class.java)
+    `when`(baseAlgo.wordSize).thenReturn(2)
     val inorder = inOrder(baseAlgo)
     val bytes = input.toByteArray()
     val tokenArray = ByteArray(0)
