@@ -1,7 +1,7 @@
 package net.plcarmel.encryptedsequences.core.sequences
 
 import net.plcarmel.encryptedsequences.core.encryption.definitions.NumberBasedEncryptionAlgo
-import net.plcarmel.encryptedsequences.core.encryption.implementations.SomeSimpleEncryptionAlgo
+import net.plcarmel.encryptedsequences.core.encryption.implementations.SimpleEncryptionAlgo1
 import net.plcarmel.encryptedsequences.core.numbers.BaseSystem
 
 class CrypticIterator(
@@ -18,7 +18,7 @@ class CrypticIterator(
     startIndex: Long = 0,
     count: Long = baseSystem.nbValues(wordSize)
   ) : this(
-    SomeSimpleEncryptionAlgo(wordSize = wordSize, baseSystem = baseSystem, key = key, nbPasses = nbPasses),
+    SimpleEncryptionAlgo1(wordSize = wordSize, baseSystem = baseSystem, key = key, nbPasses = nbPasses),
     startIndex,
     count
   )
