@@ -22,6 +22,7 @@ class CrypticIterator(
     startIndex,
     count
   )
+
   init {
     count = count.coerceAtMost(encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize))
   }
