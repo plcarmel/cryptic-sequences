@@ -27,10 +27,10 @@ import kotlin.math.roundToInt
 class ShuffledTableEncryptionAlgo(
   override val baseSystem: BaseSystem,
   @Suppress("MemberVisibilityCanBePrivate") val key: Long, // 48 bits
-  override val wordSize: Int = (ln(256.0)/ln(baseSystem.base.toDouble())).roundToInt().coerceAtLeast(2)
+  override val wordSize: Int = (ln(256.0)/ln(baseSystem.base.toDouble())).roundToInt().coerceAtLeast(2),
+  rnd: Random = Random(key)
 ) : NumberBasedEncryptionAlgo {
 
-  private val rnd = Random(key)
   private val n = baseSystem.nbValues(wordSize).toInt()
 
   // Fisher-Yates shuffle
