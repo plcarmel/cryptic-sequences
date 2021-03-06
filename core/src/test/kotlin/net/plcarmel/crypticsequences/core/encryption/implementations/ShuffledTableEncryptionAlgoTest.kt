@@ -47,16 +47,19 @@ internal class ShuffledTableEncryptionAlgoTest {
   }
 
   @Test
-  fun table_is_computed_correctly() {
+  fun tables_are_computed_correctly() {
     val baseSystem = mock(BaseSystem::class.java)
     `when`(baseSystem.base).thenReturn(10)
+    `when`(baseSystem.nbValues(eq(1))).thenReturn(10)
     `when`(baseSystem.nbValues(eq(2))).thenReturn(100)
     val algo = ShuffledTableEncryptionAlgo(baseSystem, 0, rnd = RandomMock())
     val field: Field =
       ShuffledTableEncryptionAlgo::class
         .java
-        .getDeclaredField("mainTable")
+        .getDeclaredField("allTables")
     field.trySetAccessible()
-    assertArrayEquals((99 downTo 0).map { it }.toIntArray(), field.get(algo) as IntArray)
+    @Suppress("UNCHECKED_CAST") val allTables = field.get(algo) as Map<Int, IntArray>
+    assertArrayEquals((99 downTo 0).map { it }.toIntArray(), allTables[2])
+    assertArrayEquals((9 downTo 0).map { it }.toIntArray(), allTables[1])
   }
 }
