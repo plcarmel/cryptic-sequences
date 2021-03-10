@@ -10,5 +10,6 @@ class CombineEncryptionAlgo(private val list: List<EncryptionAlgo>) : Encryption
     }
   }
 
-  override val wordSize: Int = list[0].wordSize
+  override val wordSize: Int
+    get() = list[0].wordSize
 }
