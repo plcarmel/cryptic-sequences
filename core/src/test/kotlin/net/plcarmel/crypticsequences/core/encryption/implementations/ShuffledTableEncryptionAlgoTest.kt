@@ -53,17 +53,21 @@ internal class ShuffledTableEncryptionAlgoTest {
     override fun nextInt(bound: Int): Int = i++.coerceAtMost(bound-1)
   }
 
-  private fun getAlgo(): ShuffledTableEncryptionAlgo {
+  private fun createBaseSystemMock(): BaseSystem {
     val baseSystem = mock(BaseSystem::class.java)
     `when`(baseSystem.base).thenReturn(10)
     `when`(baseSystem.nbValues(eq(1))).thenReturn(10)
     `when`(baseSystem.nbValues(eq(2))).thenReturn(100)
-    return ShuffledTableEncryptionAlgo(baseSystem, 0, rnd = RandomMock())
+    return baseSystem
+  }
+
+  private fun createAlgo(): ShuffledTableEncryptionAlgo {
+    return ShuffledTableEncryptionAlgo(createBaseSystemMock(), 0, rnd = RandomMock())
   }
 
   @Test
   fun tables_are_computed_correctly() {
-    val algo = getAlgo()
+    val algo = createAlgo()
     @Suppress("UNCHECKED_CAST") val allTables = allTablesField.get(algo) as Map<Int, IntArray>
     assertArrayEquals((99 downTo 0).map { it }.toIntArray(), allTables[2])
     assertArrayEquals((9 downTo 0).map { it }.toIntArray(), allTables[1])
@@ -71,10 +75,10 @@ internal class ShuffledTableEncryptionAlgoTest {
 
   @Test
   fun encrypt_is_implemented_correctly_for_word_size_1() {
-    val baseSystem = mock(BaseSystem::class.java)
+    val baseSystem = createBaseSystemMock()
     val algo = ShuffledTableEncryptionAlgo(baseSystem, wordSize = 1, key = 0)
     allTablesField.set(algo, hashMapOf(1 to intArrayOf(3, 9, 7)))
-    val input = byteArrayOf(1, 2, 3, 4)
+    val input = byteArrayOf(0, 0, 0, 0)
     val tokenArray = byteArrayOf()
     `when`(
       baseSystem.combineDigitsFrom(
@@ -88,6 +92,27 @@ internal class ShuffledTableEncryptionAlgoTest {
       .combineDigitsFrom(eq(input) ?: tokenArray, start=eq(2), count=eq(1))
     verify(baseSystem)
       .extractDigitsAt(eq(input) ?: tokenArray, word=eq(7L), start=eq(2), count=eq(1))
+  }
+
+  @Test
+  fun encrypt_is_implemented_correctly_for_word_size_2() {
+    val baseSystem = mock(BaseSystem::class.java)
+    val algo = ShuffledTableEncryptionAlgo(baseSystem, wordSize = 2, key = 0)
+    allTablesField.set(algo, hashMapOf(2 to intArrayOf(33, 99, 77, 88)))
+    val input = byteArrayOf(0, 0, 0, 0)
+    val tokenArray = byteArrayOf()
+    `when`(
+      baseSystem.combineDigitsFrom(
+        eq(input) ?: tokenArray,
+        start = eq(1),
+        count = eq(2)
+      )
+    ).thenReturn(3)
+    algo.encrypt(input, 1)
+    verify(baseSystem)
+      .combineDigitsFrom(eq(input) ?: tokenArray, start=eq(1), count=eq(2))
+    verify(baseSystem)
+      .extractDigitsAt(eq(input) ?: tokenArray, word=eq(88L), start=eq(1), count=eq(2))
   }
 
 }
