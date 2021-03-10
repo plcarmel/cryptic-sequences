@@ -6,13 +6,20 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import org.mockito.ArgumentMatchers.eq
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 import java.lang.reflect.Field
 import java.util.*
 
 internal class ShuffledTableEncryptionAlgoTest {
+
+  companion object {
+
+    val allTablesField: Field = ShuffledTableEncryptionAlgo::class.java.getDeclaredField("allTables")
+
+    init {
+      allTablesField.trySetAccessible()
+    }
+  }
 
   // max(round(log_base(256)), 2)
   @ParameterizedTest
@@ -46,20 +53,41 @@ internal class ShuffledTableEncryptionAlgoTest {
     override fun nextInt(bound: Int): Int = i++.coerceAtMost(bound-1)
   }
 
-  @Test
-  fun tables_are_computed_correctly() {
+  private fun getAlgo(): ShuffledTableEncryptionAlgo {
     val baseSystem = mock(BaseSystem::class.java)
     `when`(baseSystem.base).thenReturn(10)
     `when`(baseSystem.nbValues(eq(1))).thenReturn(10)
     `when`(baseSystem.nbValues(eq(2))).thenReturn(100)
-    val algo = ShuffledTableEncryptionAlgo(baseSystem, 0, rnd = RandomMock())
-    val field: Field =
-      ShuffledTableEncryptionAlgo::class
-        .java
-        .getDeclaredField("allTables")
-    field.trySetAccessible()
-    @Suppress("UNCHECKED_CAST") val allTables = field.get(algo) as Map<Int, IntArray>
+    return ShuffledTableEncryptionAlgo(baseSystem, 0, rnd = RandomMock())
+  }
+
+  @Test
+  fun tables_are_computed_correctly() {
+    val algo = getAlgo()
+    @Suppress("UNCHECKED_CAST") val allTables = allTablesField.get(algo) as Map<Int, IntArray>
     assertArrayEquals((99 downTo 0).map { it }.toIntArray(), allTables[2])
     assertArrayEquals((9 downTo 0).map { it }.toIntArray(), allTables[1])
   }
+
+  @Test
+  fun encrypt_is_implemented_correctly_for_word_size_1() {
+    val baseSystem = mock(BaseSystem::class.java)
+    val algo = ShuffledTableEncryptionAlgo(baseSystem, wordSize = 1, key = 0)
+    allTablesField.set(algo, hashMapOf(1 to intArrayOf(3, 9, 7)))
+    val input = byteArrayOf(1, 2, 3, 4)
+    val tokenArray = byteArrayOf()
+    `when`(
+      baseSystem.combineDigitsFrom(
+        eq(input) ?: tokenArray,
+        start = eq(2),
+        count = eq(1)
+      )
+    ).thenReturn(2)
+    algo.encrypt(input, 2)
+    verify(baseSystem)
+      .combineDigitsFrom(eq(input) ?: tokenArray, start=eq(2), count=eq(1))
+    verify(baseSystem)
+      .extractDigitsAt(eq(input) ?: tokenArray, word=eq(7L), start=eq(2), count=eq(1))
+  }
+
 }
