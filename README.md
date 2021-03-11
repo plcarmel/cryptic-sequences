@@ -1,3 +1,5 @@
+![doc](doc/img/bijection.svg)
+
 # cryptic-sequences
 
 ## What
