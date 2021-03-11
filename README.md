@@ -9,23 +9,27 @@ unique.
 
 ## Why
 
-This is useful, for example, to generate identifiers that are visible to the user, but that convey no information
-about the number of identifiers that have been generated, whether a given identifier has been generated before an
-other one, tc.
+This is useful, for example, to generate unique identifiers that are visible to the user, but that leak no information
+about the number of identifiers that have been generated so far, whether a given identifier has been generated before
+another one, etc.
 
 ## How
 
-Generating pseudo-random unique numbers is one of those problems that is extremely simple once you get the
-mathematics insight, but that is still kind of hard to do in practice.
+Generating pseudo-random unique numbers is one of those problems that appear extremely simple once you grasp the
+required mathematical insights, but that is still kind of hard to do in practice.
 
 ### Encryption 101
 
-The recipe is simple: use a sequence of numbers (0, 1, 2, 3, ...) and encrypt it with some
-algorithm. By design, an encryption algorithm generates values that appear to be random. Also, by definition
-it is also reversible (it is a [bijection](https://en.wikipedia.org/wiki/Bijection)). The
-generated numbers are thus guaranteed to be unique. If it was not the case, multiple source texts could be mapped to
-the same encrypted text, making the operation irreversible. The reversibility is what separates an encryption
-algorithm from a hash.
+The recipe is simple: use a sequence of numbers (0, 1, 2, 3, ...) and encrypt it in some way.
+By design, an encryption algorithm (aka a cypher) generates values that appear to be random. Also, by definition
+it is reversible (it is a [bijection](https://en.wikipedia.org/wiki/Bijection)). The
+generated numbers are thus guaranteed to be unique. Note that the reversibility requirement is what separates an
+encryption algorithm from a hash.
+
+#### Proof
+If the generated numbers where not unique, it would mean that multiple source texts could be mapped to
+the same encrypted text, making the operation irreversible, and thus not an encryption.
+
 
 ### Practical considerations
 
@@ -34,11 +38,11 @@ In practice, one would want to use a
 both for simplicity, performance, and because a
 [public key algorithm](https://en.wikipedia.org/wiki/Public-key_cryptography) has no benefit for our use case.
 
-Also, it is important to select a cypher that has a block size equal to the size of the identifiers we want to
+Also, it is important to select a block cypher that has a block size equal to the size of the identifiers we want to
 generate. A stream cypher like RC4 can also be used for identifiers that have a size that is an exact number of
 bytes (so not for *weird* number bases like 10).
 **This is the problem** that this library solves, the inability to have a block size of an arbitrary length. However,
-first, lets look at an example that uses a well known algorithm.
+first, lets look at examples that use well known cyphers.
 
 ### Let's do it using DES
 
@@ -55,9 +59,9 @@ size of *only* 64 bits. So we'll generate 64 bits identifiers.
 > echo -n 2 | openssl des-ecb -e -K 1122334455667788 | xxd -p
 4fdb1007fc4abc77
 ```
-You get the idea. What if you want a shorter identifier ? Well, you are out of luck with DES; there is no way
-you can shorten the output and keep the uniqueness property. You have to find another algorithm. What about
-RC4 ?
+You get the idea. What if you want a shorter identifier ? Well, you are out of luck with DES because if one shorten
+the output in any way, one looses the reversibility and thus the uniqueness of the generated numbers. Another
+cypher has to be used. What about RC4 ?
 
 ```bash
 > echo -n 0 | openssl rc4-40 -e -K 1122334455 | xxd -p
@@ -72,7 +76,7 @@ d8
 > echo -n 3 | openssl rc4-40 -e -K 1122334455 | xxd -p
 d9
 ```
-Ewww ! maybe not RC4. To be fair, I did not do any research on how to circumvent its weaknesses. Anyway, you get the
+Ewww ! maybe not RC4. To be fair, I didn't do any research on how to circumvent its weaknesses. Anyway, you get the
 idea: there is room for improvement.
 
 ### Let's cook a new encryption algorithm
