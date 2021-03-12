@@ -47,7 +47,7 @@ Let's say you want to generate five unique numbers having eight decimal digits e
 ```
 To generate the next numbers, you have to provide the starting point. Let's start at three, to show the overlap.
 ```
-java -jar cryptic-sequences-2.2.4-all.jar --size 8 --count 7 --start 3
+> java -jar cryptic-sequences-2.2.4-all.jar --size 8 --count 7 --start 3
 91237406
 16435778
 63565425
@@ -60,7 +60,7 @@ To generate different sequences of number, you can use a different key. key "AAA
 by the way. Also, if you do not provide the full six digits of the key, it will be padded with 'A's to the right.
 (the least significant digit are on the left).
 ```
-java -jar cryptic-sequences-2.2.4-all.jar --size 8 --count 5 --key HeJWHF
+> java -jar cryptic-sequences-2.2.4-all.jar --size 8 --count 5 --key HeJWHF
 09675205
 45599541
 96743281
