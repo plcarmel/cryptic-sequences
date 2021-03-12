@@ -58,7 +58,7 @@ To generate the next numbers, you have to provide the starting point. Let's star
 ```
 To generate different sequences of number, you can use a different key. key "AAAAAA" (0 in base64) is the default,
 by the way. Also, if you do not provide the full six digits of the key, it will be padded with 'A's to the right.
-(the least significant digit are on the left).
+(the least significant digits are on the left).
 ```
 > java -jar cryptic-sequences-2.2.4-all.jar --size 8 --count 5 --key HeJWHF
 09675205
