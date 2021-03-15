@@ -29,7 +29,6 @@ class SimpleEncryptionAlgo40(
             listOf(
               OverlapEncryptionAlgo(wordSize, shuffledTableAlgo),
               RotateDigitsEncryptionAlgo(wordSize, baseSystem),
-              ReverseEncryptionAlgo(wordSize),
               RotateEncryptionAlgo(wordSize)
             )
           ),
