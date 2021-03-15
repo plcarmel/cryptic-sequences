@@ -38,34 +38,34 @@ Options:
 Let's say you want to generate five unique numbers having eight decimal digits each. You do:
 
 ```
-> java -jar cryptic-sequences-2.2.4-all.jar --size 8 --count 5
-47384794
-68050747
-89257120
-91237406
-16435778
+> java -jar cryptic-sequences-cli-2.2.4-all.jar --size 8 --count 5
+08118345
+65626778
+53413275
+92771198
+05179246
 ```
 To generate the next numbers, you have to provide the starting point. Let's start at three, to show the overlap.
 ```
-> java -jar cryptic-sequences-2.2.4-all.jar --size 8 --count 7 --start 3
-91237406
-16435778
-63565425
-78608848
-05488599
-59062642
-58836296
+> java -jar cryptic-sequences-cli-2.2.4-all.jar --size 8 --count 7 --start 3
+92771198
+05179246
+16103705
+10269111
+26670265
+28208848
+31639447
 ```
 To generate different sequences of number, you can use a different key. key "AAAAAA" (0 in base64) is the default,
 by the way. Also, if you do not provide the full six digits of the key, it will be padded with 'A's to the right.
 (the least significant digits are on the left).
 ```
-> java -jar cryptic-sequences-2.2.4-all.jar --size 8 --count 5 --key HeJWHF
-09675205
-45599541
-96743281
-83514778
-75954843
+> java -jar cryptic-sequences-cli-2.2.4-all.jar --size 8 --count 5 --key HeJWHF
+30932557
+84782757
+53834633
+04435028
+73866892
 ```
 
 ## No, seriously, how ?
