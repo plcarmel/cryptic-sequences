@@ -29,4 +29,8 @@ class GenericBaseSystem(override val base: Int) : BaseSystem {
 
   override fun nbValues(wordSize: Int) = base.toDouble().pow(wordSize).toLong()
 
+  override fun addModulo(x: Byte, n: Int): Byte {
+    return ((x + n) % base).toByte()
+  }
+
 }

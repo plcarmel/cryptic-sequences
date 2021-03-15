@@ -30,4 +30,8 @@ class BinaryBaseSystem(private val nbBits: Int) : BaseSystem {
 
   override fun nbValues(wordSize: Int) = 1L shl (nbBits * wordSize)
 
+  override fun addModulo(x: Byte, n: Int): Byte {
+    return ((x + n) and mask).toByte()
+  }
+
 }
