@@ -1,2 +1,4 @@
 rootProject.name = 'cryptic-sequences'
-include 'core'
+include 'cryptic-sequences-core'
+include 'cryptic-sequences-cli'
+
