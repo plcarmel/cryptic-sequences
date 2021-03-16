@@ -258,7 +258,7 @@ Let continue our encryption...
 
 Now, how many passes should be done to have something that appears truly random ?
 It depends on the size of the table used to shuffle the digits. For small base
-systems, tables having additional dimensions are use, so that the table size
+systems, tables having additional dimensions are used, so that the table size
 is of at least 100 elements. In practices, using hexadecimal digits, 10 passes
 is enough to pass all the *dieharder* randomness tests.
 
