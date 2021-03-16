@@ -211,10 +211,10 @@ the next substitution. Substitution are compounded and that's what makes the
 last digits of the word taking values that appear so random. 
 
 **Note on reversibility:**
-Since all substitution is a reversible operation, the operation as
-a whole is also reversible. The table, as it is, makes it somewhat hard since
-one has to find a two digits number in one of its cell, and it can be any one
-of them. In practice, an inverse table is used to perform the decryption.
+Since all substitutions are reversible operations, the operation as
+a whole is also reversible. Of course, the table, as it is, makes it somewhat
+hard since one has to find a two digits number in one of its cell, and it can
+be any one of them. In practice, an inverse table is used to perform the decryption.
 
 #### Refining the algorithm
 
