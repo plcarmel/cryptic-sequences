@@ -390,7 +390,7 @@ SplitMix is a new random number generator for Haskell. It is an other algorithm 
 <br/>
 [SplitMix blog post](https://www.tweag.io/blog/2020-06-29-prng-test/)
 
-### DotMix
+#### DotMix
 The original algorithm that inspired many others. <br/>
 [DotMix paper](https://www.researchgate.net/publication/221643681_Deterministic_Parallel_Random-Number_Generation_for_Dynamic-Multithreading_Platforms)
 
