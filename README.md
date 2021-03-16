@@ -367,8 +367,7 @@ rgb_minimum_distance|   5|     10000|    1000|0.76007967|  PASSED
 ```
 
 Of course, it is not a good idea to use *cryptic-sequences* as a pseudo-random number
-generator since it is around two orders of magnitude slower that a typical
-pseudo-random number generator.
+generator since it is around two orders of magnitude slower that a typical one.
 
 ## Other resources
 
