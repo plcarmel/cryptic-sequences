@@ -90,7 +90,7 @@ required mathematical insights, but that is still kind of hard to do in practice
 
 The recipe is simple: use a sequence of numbers (0, 1, 2, 3, ...) and encrypt it in some way.
 By design, an encryption algorithm (aka a cypher) generates values that appear to be random. Also, by definition
-it is reversible, it is a [bijection](https://en.wikipedia.org/wiki/Bijection). The
+it is reversible; it is a [bijection](https://en.wikipedia.org/wiki/Bijection). The
 generated numbers are thus guaranteed to be unique. Note that the reversibility requirement is what separates an
 encryption algorithm from a hash.
 
