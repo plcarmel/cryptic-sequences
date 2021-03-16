@@ -166,7 +166,7 @@ There are many advantages to this technique:
 - It is very fast once the table is generated.
 
 There is obviously one major drawback:
-- The table to store or regenerate can get impracticably large for large block sizes.
+- The table to store, or regenerate, can get impracticably large for large block sizes.
 
 #### What can be done from there
 
