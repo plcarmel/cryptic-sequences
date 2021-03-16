@@ -408,11 +408,11 @@ engineering. <br/>
 <br/>
 [TestU01 paper](https://www.researchgate.net/publication/278718594_TestU01)
 
-Note: I have not tried it yet. <br/>
+Note: I have not tried it yet.
 
 #### PracRand
 "PractRand (Practically Random) is a C++ library of pseudo-random number
-generators (PRNGs, or just RNGs) and statistical tests for RNGs."
+generators (PRNGs, or just RNGs) and statistical tests for RNGs." <br/>
 [PracRand project page](https://sourceforge.net/projects/pracrand/)
 
-Note: I have not tried it yet. <br/>
+Note: I have not tried it yet.
