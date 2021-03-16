@@ -262,9 +262,9 @@ systems, tables having additional dimensions are use, so that the table size
 is of at least 100 elements. In practices, using hexadecimal digits, 10 passes
 is enough to pass all the *dieharder* randomness tests.
 
-Dieharder is a program that allows one to evaluate the quality of a random number
+*Dieharder* is a program that allows one to evaluate the quality of a random number
 generator using a suite of statistical tests. Those test include the famous
-*diehard* tests.
+*Diehard* tests.
 
 ```
 java -jar cryptic-sequences-cli-2.2.4-SNAPSHOT-all.jar \
@@ -383,13 +383,36 @@ SplittableRandom is a random number generator that has been introduced with Java
 modified **not** to produce unique numbers, but in its original form, it did. It is an improvement
 over an algorithm called *DotMix*. <br/>
 [SplittableRandom paper](https://www.researchgate.net/publication/273188325_Fast_Splittable_Pseudorandom_Number_Generators)
-<br/>
-[DotMix paper](https://www.researchgate.net/publication/221643681_Deterministic_Parallel_Random-Number_Generation_for_Dynamic-Multithreading_Platforms)
 
 #### SplitMix
-SplitMix is a new random number generator for Haskell. <br/>
+SplitMix is a new random number generator for Haskell. It is an other algorithm derived from *DotMix*. <br/>
 [SplitMix paper](https://www.researchgate.net/publication/273188325_Fast_Splittable_Pseudorandom_Number_Generators)
 <br/>
 [SplitMix blog post](https://www.tweag.io/blog/2020-06-29-prng-test/)
-<br/>
+
+### DotMix
+The original algorithm that inspired many others. <br/>
 [DotMix paper](https://www.researchgate.net/publication/221643681_Deterministic_Parallel_Random-Number_Generation_for_Dynamic-Multithreading_Platforms)
+
+### Statistical tests
+
+#### Dieharder
+One of the most well known suite of statistical tests. Possibly a bit dated.
+<br/>
+[Dieharder project page](https://webhome.phy.duke.edu/~rgb/General/dieharder.php)
+
+#### TestU01
+From *l'Université de Montréal*. I studied some mathematics there, before going back to software
+engineering. <br/>
+[TestU01 project page](http://simul.iro.umontreal.ca/testu01/tu01.html)
+<br/>
+[TestU01 paper](https://www.researchgate.net/publication/278718594_TestU01)
+
+Note: I have not tried it yet. <br/>
+
+#### PracRand
+"PractRand (Practically Random) is a C++ library of pseudo-random number
+generators (PRNGs, or just RNGs) and statistical tests for RNGs."
+[PracRand project page](https://sourceforge.net/projects/pracrand/)
+
+Note: I have not tried it yet. <br/>
