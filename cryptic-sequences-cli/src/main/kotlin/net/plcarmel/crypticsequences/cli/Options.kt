@@ -91,8 +91,8 @@ class Options(parser: ArgParser) {
     ArgType.Int,
     fullName = "block-size",
     description =
-      "Block size in values (not in bytes). When option \"byte-count\" is present and output is binary, this options" +
-      "allows to speed-up output by writing multiple values at a time."
+      "Block size in values (not in bytes). When option \"byte-count\" is present and output is binary,\n" +
+      "this option allows to speed-up output by writing multiple values at a time."
   ).default(1024)
 
   val output by
