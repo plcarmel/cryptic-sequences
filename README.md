@@ -267,7 +267,12 @@ generator using a suite of statistical tests. Those test include the famous
 *diehard* tests.
 
 ```
-java -jar cryptic-sequences-cli-2.2.4-SNAPSHOT-all.jar --size 14 --base 16 --byte-count 7 --strength 10 | dieharder -g 200 -a
+java -jar cryptic-sequences-cli-2.2.4-SNAPSHOT-all.jar \
+    --size 14 \
+    --base 16 \
+    --byte-count 7 \
+    --strength 10 \
+    | dieharder -g 200 -a
 #=============================================================================#
 #            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #
 #=============================================================================#
@@ -373,17 +378,18 @@ There are a number of other pseudo-random number generators out there that produ
 unique numbers, sometimes as an undesired side effect. They are much faster algorithms
 than what was exposed here. However, they do not offer the same flexibility.
 
-- **SplittableRandom** <br/>
-  It is a random number generator that has been introduced with Java 8. It has been
-  modified **not** to produce unique numbers, but in its original form, it did. <br/>
-  [Link to the paper](https://www.researchgate.net/publication/273188325_Fast_Splittable_Pseudorandom_Number_Generators)
-  <br/>
-  [Link to the Java documentation](https://docs.oracle.com/javase/8/docs/api/java/util/SplittableRandom.html)
+#### SplittableRandom
+SplittableRandom is a random number generator that has been introduced with Java 8. It has been
+modified **not** to produce unique numbers, but in its original form, it did. It is an improvement
+over an algorithm called *DotMix*. <br/>
+[SplittableRandom paper](https://www.researchgate.net/publication/273188325_Fast_Splittable_Pseudorandom_Number_Generators)
+<br/>
+[DotMix paper](https://www.researchgate.net/publication/221643681_Deterministic_Parallel_Random-Number_Generation_for_Dynamic-Multithreading_Platforms)
 
-- **SplitMix** <br/>
-  A new random number generator for Haskell. <br/>
-  [Link to the paper](https://dl.acm.org/doi/10.1145/2714064.2660195) <br/>
-  [Link to a preceding paper](https://dl.acm.org/doi/10.1145/2503778.2503784) <br/>
-  [Link to a blog post describing it](https://www.tweag.io/blog/2020-06-29-prng-test/)
-
-- 
+#### SplitMix
+SplitMix is a new random number generator for Haskell. <br/>
+[SplitMix paper](https://www.researchgate.net/publication/273188325_Fast_Splittable_Pseudorandom_Number_Generators)
+<br/>
+[SplitMix blog post](https://www.tweag.io/blog/2020-06-29-prng-test/)
+<br/>
+[DotMix paper](https://www.researchgate.net/publication/221643681_Deterministic_Parallel_Random-Number_Generation_for_Dynamic-Multithreading_Platforms)
