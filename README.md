@@ -4,14 +4,19 @@
 
 ## What
 
-"cryptic-sequences" is a library that allows one to generate pseudo-random numbers that are also guaranteed to be
-unique.
+"cryptic-sequences" is a library that allows one to generate a pseudo-random numbers generator (PRNG) that
+return numbers that are guaranteed to be unique. They are part of a growing family of so-called *splittable*
+pseudo-random number generators (PRNG). Links to relevant papers are provided at the end of the document.
+
+*cryptic-sequences* sacrifices speed for flexibility and simplicity. It can generate PRNGs that have periods
+covering all the *words* that can be generated with *n* digits of a given base. Despite its simplicity,
+the result of *cryptic-sequences* pass most statistical tests for randomness.
 
 ## Why
 
-This is useful, for example, to generate unique identifiers that are visible to the user, but that leak no information
-about the number of identifiers that have been generated so far, whether a given identifier has been generated before
-another one, etc.
+Being able to generate unique pseudo-random numbers is useful, for example, to generate unique identifiers
+that are visible to the user, but that leak no obvious information about the number of identifiers that have
+been generated so far, whether a given identifier has been generated before another one, etc.
 
 ## How
 
@@ -359,3 +364,26 @@ rgb_minimum_distance|   5|     10000|    1000|0.76007967|  PASSED
 Of course, it is not a good idea to use *cryptic-sequences* as a pseudo-random number
 generator since it is around two orders of magnitude slower that a typical
 pseudo-random number generator.
+
+## Other resources
+
+### Other pseudo-random number generators that generate unique results
+
+There are a number of other pseudo-random number generators out there that produce
+unique numbers, sometimes as an undesired side effect. They are much faster algorithms
+than what was exposed here. However, they do not offer the same flexibility.
+
+- **SplittableRandom** <br/>
+  It is a random number generator that has been introduced with Java 8. It has been
+  modified **not** to produce unique numbers, but in its original form, it did. <br/>
+  [Link to the paper](https://www.researchgate.net/publication/273188325_Fast_Splittable_Pseudorandom_Number_Generators)
+  <br/>
+  [Link to the Java documentation](https://docs.oracle.com/javase/8/docs/api/java/util/SplittableRandom.html)
+
+- **SplitMix** <br/>
+  A new random number generator for Haskell. <br/>
+  [Link to the paper](https://dl.acm.org/doi/10.1145/2714064.2660195) <br/>
+  [Link to a preceding paper](https://dl.acm.org/doi/10.1145/2503778.2503784) <br/>
+  [Link to a blog post describing it](https://www.tweag.io/blog/2020-06-29-prng-test/)
+
+- 
