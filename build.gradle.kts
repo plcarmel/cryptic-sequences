@@ -1,52 +1,42 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  val kotlinVersion: String by project
+  dependencies {
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+  }
+}
+
 plugins {
-  id("idea")
-  id("java")
-  kotlin("jvm") version("1.4.31")
+  kotlin("multiplatform") version("1.4.31")
 }
 
-group = "net.plcarmel.cryptic-sequences"
-version = "2.2.4-SNAPSHOT"
+kotlin {
 
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  project(":cryptic-sequences-cli")
-  project(":cryptic-sequences-core")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.31:modular")
-}
-
-subprojects {
-
-  apply(plugin = "org.jetbrains.kotlin.jvm")
-
-  tasks {
-    listOf(compileKotlin, compileTestKotlin).forEach {
-      it {
+  jvm {
+    allprojects {
+      repositories {
+        mavenCentral()
+      }
+      tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
           jvmTarget = "11"
         }
       }
     }
-  }
 
-  java {
-    modularity.inferModulePath.set(true)
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-  }
-
-  configure<SourceSetContainer> {
-    named("main") {
-      java.srcDir("src/main/java")
-      java.srcDir("src/main/kotlin")
-    }
-    named("test") {
-      java.srcDir("src/test/java")
-      java.srcDir("src/test/kotlin")
+    sourceSets.all {
+      kotlin.setSrcDirs(listOf("$name/src"))
+      resources.setSrcDirs(listOf("$name/resources"))
+      languageSettings.apply {
+        useExperimentalAnnotation("kotlin.Experimental")
+        useExperimentalAnnotation("kotlinx.cli.ExperimentalCli")
+      }
     }
   }
+
 
 }
-

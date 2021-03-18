@@ -1,37 +1,47 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-  kotlin("jvm")
+  kotlin("multiplatform")
   id("com.github.johnrengelman.shadow") version("6.1.0")
 }
 
-group = "net.plcarmel.cryptic-sequences"
-version = "2.2.4-SNAPSHOT"
+kotlin {
 
-repositories {
-  mavenCentral()
-  maven {
-    url = uri("https://kotlin.bintray.com/kotlinx")
-  }
-}
+  jvm()
 
-dependencies {
-  implementation(project(":cryptic-sequences-core"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.31:modular")
-  implementation("org.jetbrains.kotlinx:kotlinx-cli-jvm:0.3.1")
-}
-
-tasks {
-  compileJava {
-    options.compilerArgs = listOf(
-      "--module-path",
-      classpath.asPath
-    )
-  }
-  shadowJar {
-    manifest {
-      attributes["Main-Class"] = "net.plcarmel.crypticsequences.cli.MainKt"
+  sourceSets {
+    @Suppress("UNUSED_VARIABLE")
+    val commonMain by getting {
+      dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-common")
+        implementation(project(":cryptic-sequences-core"))
+        implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
+      }
+    }
+    @Suppress("UNUSED_VARIABLE")
+    val jvmMain by getting {
+      dependencies {
+        implementation(kotlin("stdlib-jdk8"))
+      }
     }
   }
-  jar {
-    dependsOn(shadowJar)
+
+  repositories {
+    mavenCentral()
+    maven {
+      url = uri("https://kotlin.bintray.com/kotlinx")
+    }
   }
+
+  task<ShadowJar>(name="shadowJar") {
+    val jvmJar = tasks.withType<org.gradle.jvm.tasks.Jar>().named("jvmJar").get()
+    dependsOn(jvmJar)
+    from(jvmJar.archiveFile)
+    archiveClassifier.set("shadow")
+    configurations.add(project.configurations.named("jvmRuntimeClasspath").get())
+    manifest {
+      attributes("Main-Class" to "net.plcarmel.crypticsequences.cli.MainKt")
+    }
+  }
+
 }

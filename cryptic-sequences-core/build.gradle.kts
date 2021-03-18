@@ -1,35 +1,42 @@
 plugins {
-  kotlin("jvm")
+  kotlin("multiplatform")
 }
 
-group = "net.plcarmel.cryptic-sequences"
-version = "2.2.4-SNAPSHOT"
+kotlin {
 
-repositories {
-    mavenCentral()
-}
+  jvm()
 
-dependencies {
-  implementation(
-    "org.jetbrains.kotlin",
-    "kotlin-stdlib",
-    "1.4.31",
-    classifier="modular"
-  )
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
-  testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
-  testImplementation("org.mockito:mockito-junit-jupiter:3.8.0")
-}
+  sourceSets {
+    @Suppress("UNUSED_VARIABLE")
+    val commonMain by getting {
+      dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-common")
+      }
+    }
+    @Suppress("UNUSED_VARIABLE")
+    val jvmTest by getting {
+      val jupiterVersion = "5.7.1"
+      val mockitoVersion = "3.8.0"
+      dependencies {
+        implementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
+        implementation("org.junit.jupiter:junit-jupiter-params:${jupiterVersion}")
+        implementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
+        runtimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")
+      }
+    }
+  }
 
-tasks {
-  compileJava {
-    dependsOn(compileKotlin)
-    options.compilerArgs = listOf(
-      "--patch-module",
-      "net.plcarmel.crypticsequences.core=${sourceSets.main.get().output.asPath}"
-    )
+  tasks.named<Test>("jvmTest") {
+    useJUnitPlatform()
+    testLogging {
+      showExceptions = true
+      showStandardStreams = true
+      events = setOf(
+        org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
+      )
+      exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
   }
 
 }
