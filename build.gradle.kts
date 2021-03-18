@@ -26,17 +26,9 @@ kotlin {
           jvmTarget = "11"
         }
       }
+
     }
 
-    sourceSets.all {
-      kotlin.setSrcDirs(listOf("$name/src"))
-      resources.setSrcDirs(listOf("$name/resources"))
-      languageSettings.apply {
-        useExperimentalAnnotation("kotlin.Experimental")
-        useExperimentalAnnotation("kotlinx.cli.ExperimentalCli")
-      }
-    }
   }
-
 
 }
