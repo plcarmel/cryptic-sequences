@@ -173,87 +173,95 @@ There is obviously one major drawback:
 One thing that can be done is to take a table of a reasonable size and apply it multiple times,
 at different locations on the word, in order to quickly "shuffle" it to a new unpredictable value.
  
-Let's say we take an array of the digits 0 to 99, and we shuffle it. Then we fill a 10x10 table
-with the resulting values.
+Let's say we take an array of the digits 0 to 99, and we shuffle it, getting those values:
+
+<small>
+[
+ 24, 54, 94, 80, 47, 40, 63, 97, 42, 96
+ 99, 44, 43, 22, 69, 79, 34, 41, 85, 37
+ 89, 93, 15, 17, 62, 76, 02, 45, 67, 08
+ 18, 58, 71, 29, 46, 78, 11, 07, 04, 27
+ 68, 09, 81, 95, 70, 75, 39, 72, 13, 19
+ 55, 83, 64, 28, 86, 06, 05, 31, 14, 20
+ 30, 00, 65, 82, 32, 56, 91, 98, 88, 35
+ 90, 92, 66, 49, 10, 48, 53, 74, 12, 23
+ 38, 21, 26, 52, 84, 03, 01, 57, 50, 77
+ 16, 51, 36, 73, 33, 59, 87, 25, 61, 60 
+]
+
+</small>
+
+We could use them to fill a table directly, but to avoid getting cells in the table pointing to themselves, it
+is better to interpret that sequence of number as one long cycle: 24 gives 54, 54 gives 94, etc. Using this cycle,
+we can then fill a 10x10 table
 
 <small>
 
 |     |   0  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |
 |:---:|:----:|:-----|:----:|:----:|:----:|:----:|:----:|:----:|:----:|-----:|
-|**0**|  24  |  54  |  94  |  80  |  47  |  40  |  63  |  97  |  42  |  96  |
-|**1**|  99  |  44  |  43  |  22  |  69  |  79  |  34  |  41  |  85  |  37  |
-|**2**|  89  |  93  |  15  |  17  |  62  |  76  |  02  |  45  |  67  |  08  |
-|**3**|  18  |  58  |  71  |  29  |  46  |  78  |  11  |  07  |  04  |  27  |
-|**4**|  68  |  09  |  81  |  95  |  70  |  75  |  39  |  72  |  13  |  19  |
-|**5**|  55  |  83  |  64  |  28  |  86  |  06  |  05  |  31  |  14  |  20  |
-|**6**|  30  |  00  |  65  |  82  |  32  |  56  |  91  |  98  |  88  |  35  |
-|**7**|  90  |  92  |  66  |  49  |  10  |  48  |  53  |  74  |  12  |  23  |
-|**8**|  38  |  21  |  26  |  52  |  84  |  03  |  01  |  57  |  50  |  77  |
-|**9**|  16  |  51  |  36  |  73  |  33  |  59  |  87  |  25  |  61  |  60  |
+|**0**|  65  |  57  |  45  |  01  |  27  |  31  |  05  |  04  |  18  |  81  |
+|**1**|  48  |  07  |  23  |  19  |  20  |  17  |  51  |  62  |  58  |  55  |
+|**2**|  30  |  26  |  69  |  38  |  54  |  61  |  52  |  68  |  86  |  46  |
+|**3**|  00  |  14  |  56  |  59  |  41  |  90  |  73  |  89  |  21  |  72  |
+|**4**|  63  |  85  |  96  |  22  |  43  |  67  |  78  |  40  |  53  |  10  |
+|**5**|  77  |  36  |  84  |  74  |  94  |  83  |  91  |  50  |  71  |  87  |
+|**6**|  24  |  60  |  76  |  97  |  28  |  82  |  49  |  08  |  09  |  79  |
+|**7**|  75  |  29  |  13  |  33  |  12  |  39  |  02  |  16  |  11  |  34  |
+|**8**|  47  |  95  |  32  |  64  |  03  |  37  |  06  |  25  |  35  |  93  |
+|**9**|  92  |  98  |  66  |  15  |  80  |  70  |  99  |  42  |  88  |  44  |
 
 </small>
 
 Now, let's use that table to encrypt the value 0000
 ```
 ▼  ▼
-0  0  0  0    t[0][0] = 24
+0  0  0  0    t[0][0] = 65
 
    ▼  ▼
-2  4  0  0    t[4][0] = 68
+6  5  0  0    t[5][0] = 77
 
       ▼  ▼
-2  6  8  0    t[8][0] = 38
+6  7  7  0    t[7][0] = 75
 
-2  6  3  8
+6  7  7  5
 ```
 A substitution sets one digit of the result, and the second digit influences
 the next substitution. Substitution are compounded and that's what makes the
-last digits of the word taking values that appear so random. 
+last digits of the word take values that appear so random. 
 
 **Note on reversibility:**
 Since all substitutions are reversible operations, the operation as
 a whole is also reversible. Of course, the table, as it is, makes it somewhat
-hard since one has to find a two digits number in one of its cell, and it can
-be any one of them. In practice, an inverse table is used to perform the decryption.
+hard. In practice, an inverse table is used to perform the decryption.
 
 #### Refining the algorithm
 
 The encryption above looks pretty good, but not so much if we pay closer
 attention. Last digits are shuffled pretty well, but the first ones, not
 so much. All words that start with *00* will always end-up being encrypted
-to a word starting with *2*. That's not acceptable.
+to a word starting with *6*. That's not acceptable.
 
 The way to fix this is to do multiple passes. Also, we will rotate the whole
 word to the left, so that the least shuffled digit will be the best shuffled
 one on the next pass.
 
-There is one problem left. What if we end-up with a table that maps *00* to
-itself. This will happen, on average, one time over one hundred generated
-keys. So, *0000* will be mapped to itself way too often. One way to solve the
-problem is to add one to each digit after each pass. That way, we will be able
-to free ourselves from this kind of situation.
-
 Let continue our encryption...
 
 ```
-2  6  3  8    rotate to the left
-
-6  3  8  2    add one to each digit
+6  7  7  5    rotate to the left
 
 ▼  ▼
-7  4  9  3    t[7][4] = 10
+7  7  5  6    t[7][7] = 16
 
    ▼  ▼
-1  0  9  3    t[0][9] = 96  
+1  6  5  6    t[6][5] = 82  
 
       ▼  ▼
-1  9  6  3    t[6][3] = 82 
+1  8  2  3    t[2][3] = 38 
 
-1  9  8  2    rotate to the left (end of second pass)
+1  9  3  8    rotate to the left (end of second pass)
 
-9  8  2  1    add one to each digit (end of second pass)
-
-0  9  3  2    that's the result at the end of the second pass
+9  3  8  1    that's the result at the end of the second pass
 ```
 
 Now, how many passes should be done to have something that appears truly random ?

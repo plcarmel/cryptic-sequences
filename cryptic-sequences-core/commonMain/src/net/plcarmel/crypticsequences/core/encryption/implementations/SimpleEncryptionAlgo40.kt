@@ -22,14 +22,10 @@ class SimpleEncryptionAlgo40(
   init {
     val shuffledTableAlgo = ShuffledTableEncryptionAlgo(baseSystem, prng)
     algo =
-      if (shuffledTableAlgo.wordSize >= wordSize)
-        shuffledTableAlgo
-      else
         MultiPassEncryptionAlgo(
           CombineEncryptionAlgo(
             listOf(
               OverlapEncryptionAlgo(wordSize, shuffledTableAlgo),
-              RotateDigitsEncryptionAlgo(wordSize, baseSystem),
               RotateEncryptionAlgo(wordSize)
             )
           ),
