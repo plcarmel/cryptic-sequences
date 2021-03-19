@@ -9,7 +9,6 @@ class OverlapEncryptionAlgoTest {
 
   @ParameterizedTest
   @CsvSource(
-    "   x, 0, 1, 0,  ,  ",
     "  xx, 0, 2, 0,  ,  ",
     " xxx, 0, 3, 0, 1,  ",
     "xxxx, 0, 4, 0, 1, 2",
@@ -25,10 +24,10 @@ class OverlapEncryptionAlgoTest {
   ) {
     val baseAlgo = mock(EncryptionAlgo::class.java)
     `when`(baseAlgo.wordSize).thenReturn(2)
-    val inorder = inOrder(baseAlgo)
     val bytes = input.toByteArray()
     val tokenArray = ByteArray(0)
     OverlapEncryptionAlgo(count, baseAlgo).encrypt(bytes, at)
+    val inorder = inOrder(baseAlgo)
     listOfNotNull(at1, at2, at3)
       .forEach { inorder.verify(baseAlgo).encrypt(eq(bytes) ?: tokenArray, eq(it)) }
     inorder.verifyNoMoreInteractions()

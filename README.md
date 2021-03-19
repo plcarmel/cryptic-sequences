@@ -2,11 +2,14 @@
 
 # cryptic-sequences
 
+Note: The library is close to being production ready, but it is not there yet. It is a matter of days, though, before
+the first release is built.
+
 ## What
 
-"cryptic-sequences" is a library that allows one to generate a pseudo-random numbers generator (PRNG) that
-return numbers that are guaranteed to be unique. They are part of a growing family of so-called *splittable*
-pseudo-random number generators (PRNG). Links to relevant papers are provided at the end of the document.
+"cryptic-sequences" is a Kotlin multiplatform library that allows one to generate a pseudo-random numbers generator
+(PRNG) that return numbers that are guaranteed to be unique. They are part of a growing family of so-called
+*splittable* pseudo-random number generators (PRNG). Links to relevant papers are provided at the end of the document.
 
 *cryptic-sequences* sacrifices speed for flexibility and simplicity. It can generate PRNGs that have periods
 covering all the *words* that can be generated with *n* digits of a given base. Despite its simplicity,

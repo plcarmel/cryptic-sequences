@@ -3,7 +3,7 @@ package net.plcarmel.crypticsequences.cli
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import net.plcarmel.crypticsequences.core.encryption.implementations.SimpleEncryptionAlgo40
+import net.plcarmel.crypticsequences.core.encryption.implementations.simpleEncryptionAlgo40
 import net.plcarmel.crypticsequences.core.numbers.BinaryBaseSystem
 import net.plcarmel.crypticsequences.core.numbers.GenericBaseSystem
 import net.plcarmel.crypticsequences.core.numbers.NumberRepresentationSystem
@@ -18,7 +18,7 @@ class Options(parser: ArgParser) {
       else GenericBaseSystem(base)
     val random = Random(NumberRepresentationSystem.mime64.parseToLong(key))
     return CrypticIterator(
-      SimpleEncryptionAlgo40(
+      simpleEncryptionAlgo40(
         baseSystem = baseSystem,
         wordSize = size,
         prng = random,
