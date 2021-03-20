@@ -15,10 +15,14 @@ kotlin {
 
   val partiallySupportedTargets =
     listOf(
-      linux64Target,
       windows32Target,
       windows64Target,
       macOsTarget
+    )
+
+  val posixTargets =
+    listOf(
+      linux64Target
     )
 
   partiallySupportedTargets.forEach {
@@ -26,6 +30,16 @@ kotlin {
       binaries {
         executable {
           entryPoint = "net.plcarmel.crypticsequences.cli.mainWithBasicIo"
+        }
+      }
+    }
+  }
+
+  posixTargets.forEach {
+    it.apply {
+      binaries {
+        executable {
+          entryPoint = "net.plcarmel.crypticsequences.cli.main"
         }
       }
     }
@@ -77,7 +91,7 @@ kotlin {
     archiveClassifier.set("shadow")
     configurations.add(project.configurations.named("jvmRuntimeClasspath").get())
     manifest {
-      attributes("Main-Class" to "net.plcarmel.crypticsequences.cli.MainKt")
+      attributes("Main-Class" to "net.plcarmel.crypticsequences.cli.JavaMainKt")
     }
   }
 
