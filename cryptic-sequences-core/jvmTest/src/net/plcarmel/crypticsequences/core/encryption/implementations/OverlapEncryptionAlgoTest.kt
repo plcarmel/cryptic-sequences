@@ -33,5 +33,4 @@ class OverlapEncryptionAlgoTest {
     inorder.verifyNoMoreInteractions()
   }
 
-
 }

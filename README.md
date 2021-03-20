@@ -47,48 +47,46 @@ this option allows to speed-up output by writing multiple values at a time. { In
 Let's say you want to generate five unique numbers having eight decimal digits each. You do:
 
 ```
-> java -jar cryptic-sequences-cli-2.2.4-all.jar --size 8 --count 5
-08118345
-65626778
-53413275
-92771198
-05179246
+> java -jar cryptic-sequences-cli-shadow.jar --size 8 --count 5
+46911695
+50312533
+59216998
+04627193
+90969238
 ```
 To generate the next numbers, you have to provide the starting point. Let's start at three, to show the overlap.
 ```
-> java -jar cryptic-sequences-cli-2.2.4-all.jar --size 8 --count 7 --start 3
-92771198
-05179246
-16103705
-10269111
-26670265
-28208848
-31639447
+> java -jar cryptic-sequences-cli-shadow.jar --size 8 --count 7 --start 3
+04627193
+90969238
+70113075
+24089412
+02965207
+95742707
+92143982
 ```
 To generate different sequences of number, you can use a different key. key "AAAAAA" (0 in base64) is the default,
 by the way. Also, if you do not provide the full six digits of the key, it will be padded with 'A's to the right.
 (the least significant digits are on the left).
 ```
-> java -jar cryptic-sequences-cli-2.2.4-all.jar --size 8 --count 5 --key HeJWHF
-30932557
-84782757
-53834633
-04435028
-73866892
+> java -jar cryptic-sequences-cli-shadow.jar --size 8 --count 5 --key HeJWHF
+95576382
+84714087
+22956595
+12723002
+37511511
 ```
 
 To have a demonstration that all numbers are generated once and only once, one can
 count the lines, and check that the number of lines stays the same when duplicates
 are removed.
 ```
-> java -jar cryptic-sequences-cli-2.2.4-all.jar --size 4 | wc -l
+> java -jar cryptic-sequences-cli-shadow.jar --size 4 | wc -l
 10000
 
-> java -jar cryptic-sequences-cli-2.2.4-all.jar --size 4 | sort | uniq | wc -l
+> java -jar cryptic-sequences-cli-shadow.jar --size 4 | sort | uniq | wc -l
 10000
 ```
-
-
 ## No, seriously, how ?
 
 Generating pseudo-random unique numbers is one of those problems that appear extremely simple once you grasp the
@@ -101,11 +99,6 @@ By design, an encryption algorithm (aka a cypher) generates values that appear t
 it is reversible; it is a [bijection](https://en.wikipedia.org/wiki/Bijection). The
 generated numbers are thus guaranteed to be unique. Note that the reversibility requirement is what separates an
 encryption algorithm from a hash.
-
-#### Proof
-If the generated numbers where not unique, it would mean that multiple source texts could be mapped to
-the same encrypted text, making the operation irreversible, and thus not an encryption.
-
 
 ### Practical considerations
 
@@ -278,103 +271,103 @@ generator using a suite of statistical tests. Those test include the famous
 *Diehard* tests.
 
 ```
-java -jar cryptic-sequences-cli-2.2.4-SNAPSHOT-all.jar \
-    --size 14 \
-    --base 16 \
-    --byte-count 7 \
-    --strength 10 \
-    | dieharder -g 200 -a
+java -jar cryptic-sequences-cli-shadow.jar \
+  --size 14 \
+  --base 16 \
+  --byte-count 7 \
+  --strength 12 \
+  | dieharder -g 200 -a
 #=============================================================================#
 #            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #
 #=============================================================================#
    rng_name    |rands/second|   Seed   |
-stdin_input_raw|  6.04e+05  | 758773010|
+stdin_input_raw|  1.00e+06  |1892629328|
 #=============================================================================#
         test_name   |ntup| tsamples |psamples|  p-value |Assessment
 #=============================================================================#
-   diehard_birthdays|   0|       100|     100|0.83887091|  PASSED  
-      diehard_operm5|   0|   1000000|     100|0.41998090|  PASSED  
-  diehard_rank_32x32|   0|     40000|     100|0.50543698|  PASSED  
-    diehard_rank_6x8|   0|    100000|     100|0.14972002|  PASSED  
-   diehard_bitstream|   0|   2097152|     100|0.49392852|  PASSED  
-        diehard_opso|   0|   2097152|     100|0.94876854|  PASSED  
-        diehard_oqso|   0|   2097152|     100|0.58282417|  PASSED  
-         diehard_dna|   0|   2097152|     100|0.02428606|  PASSED  
-diehard_count_1s_str|   0|    256000|     100|0.89654765|  PASSED  
-diehard_count_1s_byt|   0|    256000|     100|0.49960447|  PASSED  
- diehard_parking_lot|   0|     12000|     100|0.77743129|  PASSED  
-    diehard_2dsphere|   2|      8000|     100|0.90089711|  PASSED  
-    diehard_3dsphere|   3|      4000|     100|0.93344892|  PASSED  
-     diehard_squeeze|   0|    100000|     100|0.34453380|  PASSED  
-        diehard_sums|   0|       100|     100|0.00013626|   WEAK   
-        diehard_runs|   0|    100000|     100|0.42278127|  PASSED  
-        diehard_runs|   0|    100000|     100|0.87179635|  PASSED  
-       diehard_craps|   0|    200000|     100|0.77027333|  PASSED  
-       diehard_craps|   0|    200000|     100|0.65596374|  PASSED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.92963739|  PASSED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.20769738|  PASSED  
-         sts_monobit|   1|    100000|     100|0.68066763|  PASSED  
-            sts_runs|   2|    100000|     100|0.47059752|  PASSED  
-          sts_serial|   1|    100000|     100|0.03139430|  PASSED  
-          sts_serial|   2|    100000|     100|0.51408161|  PASSED  
-          sts_serial|   3|    100000|     100|0.28793344|  PASSED  
-          sts_serial|   3|    100000|     100|0.14496027|  PASSED  
-          sts_serial|   4|    100000|     100|0.07472481|  PASSED  
-          sts_serial|   4|    100000|     100|0.29400779|  PASSED  
-          sts_serial|   5|    100000|     100|0.09529000|  PASSED  
-          sts_serial|   5|    100000|     100|0.95421449|  PASSED  
-          sts_serial|   6|    100000|     100|0.79498286|  PASSED  
-          sts_serial|   6|    100000|     100|0.46229277|  PASSED  
-          sts_serial|   7|    100000|     100|0.46110124|  PASSED  
-          sts_serial|   7|    100000|     100|0.69354046|  PASSED  
-          sts_serial|   8|    100000|     100|0.92231105|  PASSED  
-          sts_serial|   8|    100000|     100|0.93172700|  PASSED  
-          sts_serial|   9|    100000|     100|0.64887948|  PASSED  
-          sts_serial|   9|    100000|     100|0.98643204|  PASSED  
-          sts_serial|  10|    100000|     100|0.75701293|  PASSED  
-          sts_serial|  10|    100000|     100|0.93236462|  PASSED  
-          sts_serial|  11|    100000|     100|0.84614275|  PASSED  
-          sts_serial|  11|    100000|     100|0.73211556|  PASSED  
-          sts_serial|  12|    100000|     100|0.59264112|  PASSED  
-          sts_serial|  12|    100000|     100|0.17687590|  PASSED  
-          sts_serial|  13|    100000|     100|0.13302742|  PASSED  
-          sts_serial|  13|    100000|     100|0.81643231|  PASSED  
-          sts_serial|  14|    100000|     100|0.06128837|  PASSED  
-          sts_serial|  14|    100000|     100|0.10401939|  PASSED  
-          sts_serial|  15|    100000|     100|0.07130613|  PASSED  
-          sts_serial|  15|    100000|     100|0.48054138|  PASSED  
-          sts_serial|  16|    100000|     100|0.02402599|  PASSED  
-          sts_serial|  16|    100000|     100|0.26806753|  PASSED  
-         rgb_bitdist|   1|    100000|     100|0.52044211|  PASSED  
-         rgb_bitdist|   2|    100000|     100|0.06856119|  PASSED  
-         rgb_bitdist|   3|    100000|     100|0.69543543|  PASSED  
-         rgb_bitdist|   4|    100000|     100|0.62598637|  PASSED  
-         rgb_bitdist|   5|    100000|     100|0.95080167|  PASSED  
-         rgb_bitdist|   6|    100000|     100|0.53256626|  PASSED  
-         rgb_bitdist|   7|    100000|     100|0.80515870|  PASSED  
-         rgb_bitdist|   8|    100000|     100|0.75402651|  PASSED  
-         rgb_bitdist|   9|    100000|     100|0.09290876|  PASSED  
-         rgb_bitdist|  10|    100000|     100|0.79745718|  PASSED  
-         rgb_bitdist|  11|    100000|     100|0.87692790|  PASSED  
-         rgb_bitdist|  12|    100000|     100|0.05472123|  PASSED  
-rgb_minimum_distance|   2|     10000|    1000|0.13133000|  PASSED  
-rgb_minimum_distance|   3|     10000|    1000|0.20428047|  PASSED  
-rgb_minimum_distance|   4|     10000|    1000|0.43411254|  PASSED  
-rgb_minimum_distance|   5|     10000|    1000|0.76007967|  PASSED  
-    rgb_permutations|   2|    100000|     100|0.98412353|  PASSED  
-    rgb_permutations|   3|    100000|     100|0.65979972|  PASSED  
-    rgb_permutations|   4|    100000|     100|0.66638295|  PASSED  
-    rgb_permutations|   5|    100000|     100|0.67378511|  PASSED  
-      rgb_lagged_sum|   0|   1000000|     100|0.11786915|  PASSED  
-      rgb_lagged_sum|   1|   1000000|     100|0.60681449|  PASSED  
-      rgb_lagged_sum|   2|   1000000|     100|0.07222434|  PASSED  
-      rgb_lagged_sum|   3|   1000000|     100|0.60454073|  PASSED  
-      rgb_lagged_sum|   4|   1000000|     100|0.06910332|  PASSED  
-      rgb_lagged_sum|   5|   1000000|     100|0.36021681|  PASSED  
-      rgb_lagged_sum|   6|   1000000|     100|0.15993040|  PASSED  
-      rgb_lagged_sum|   7|   1000000|     100|0.10521590|  PASSED  
-      rgb_lagged_sum|   8|   1000000|     100|0.99510229|   WEAK   
-      rgb_lagged_sum|   9|   1000000|     100|0.73139716|  PASSED  
+   diehard_birthdays|   0|       100|     100|0.40282710|  PASSED  
+      diehard_operm5|   0|   1000000|     100|0.56845616|  PASSED  
+  diehard_rank_32x32|   0|     40000|     100|0.40907378|  PASSED  
+    diehard_rank_6x8|   0|    100000|     100|0.65956033|  PASSED  
+   diehard_bitstream|   0|   2097152|     100|0.91516767|  PASSED  
+        diehard_opso|   0|   2097152|     100|0.77904012|  PASSED  
+        diehard_oqso|   0|   2097152|     100|0.87503398|  PASSED  
+         diehard_dna|   0|   2097152|     100|0.25160202|  PASSED  
+diehard_count_1s_str|   0|    256000|     100|0.17051264|  PASSED  
+diehard_count_1s_byt|   0|    256000|     100|0.66111968|  PASSED  
+ diehard_parking_lot|   0|     12000|     100|0.83744977|  PASSED  
+    diehard_2dsphere|   2|      8000|     100|0.13039013|  PASSED  
+    diehard_3dsphere|   3|      4000|     100|0.32879232|  PASSED  
+     diehard_squeeze|   0|    100000|     100|0.25707882|  PASSED  
+        diehard_sums|   0|       100|     100|0.14466473|  PASSED  
+        diehard_runs|   0|    100000|     100|0.90400661|  PASSED  
+        diehard_runs|   0|    100000|     100|0.19806263|  PASSED  
+       diehard_craps|   0|    200000|     100|0.91344492|  PASSED  
+       diehard_craps|   0|    200000|     100|0.42926218|  PASSED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.63758431|  PASSED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.82835757|  PASSED  
+         sts_monobit|   1|    100000|     100|0.31181790|  PASSED  
+            sts_runs|   2|    100000|     100|0.99653415|   WEAK   
+          sts_serial|   1|    100000|     100|0.81499899|  PASSED  
+          sts_serial|   2|    100000|     100|0.40059542|  PASSED  
+          sts_serial|   3|    100000|     100|0.78464242|  PASSED  
+          sts_serial|   3|    100000|     100|0.99244469|  PASSED  
+          sts_serial|   4|    100000|     100|0.97396261|  PASSED  
+          sts_serial|   4|    100000|     100|0.85079644|  PASSED  
+          sts_serial|   5|    100000|     100|0.42226231|  PASSED  
+          sts_serial|   5|    100000|     100|0.72713650|  PASSED  
+          sts_serial|   6|    100000|     100|0.76398888|  PASSED  
+          sts_serial|   6|    100000|     100|0.75633526|  PASSED  
+          sts_serial|   7|    100000|     100|0.99956865|   WEAK   
+          sts_serial|   7|    100000|     100|0.41033188|  PASSED  
+          sts_serial|   8|    100000|     100|0.76711237|  PASSED  
+          sts_serial|   8|    100000|     100|0.54783055|  PASSED  
+          sts_serial|   9|    100000|     100|0.77729174|  PASSED  
+          sts_serial|   9|    100000|     100|0.99411432|  PASSED  
+          sts_serial|  10|    100000|     100|0.33515461|  PASSED  
+          sts_serial|  10|    100000|     100|0.98348408|  PASSED  
+          sts_serial|  11|    100000|     100|0.97260643|  PASSED  
+          sts_serial|  11|    100000|     100|0.68675627|  PASSED  
+          sts_serial|  12|    100000|     100|0.47067213|  PASSED  
+          sts_serial|  12|    100000|     100|0.41807782|  PASSED  
+          sts_serial|  13|    100000|     100|0.78440514|  PASSED  
+          sts_serial|  13|    100000|     100|0.80033402|  PASSED  
+          sts_serial|  14|    100000|     100|0.68297263|  PASSED  
+          sts_serial|  14|    100000|     100|0.62709343|  PASSED  
+          sts_serial|  15|    100000|     100|0.86053278|  PASSED  
+          sts_serial|  15|    100000|     100|0.49204256|  PASSED  
+          sts_serial|  16|    100000|     100|0.30389497|  PASSED  
+          sts_serial|  16|    100000|     100|0.90982756|  PASSED  
+         rgb_bitdist|   1|    100000|     100|0.55306620|  PASSED  
+         rgb_bitdist|   2|    100000|     100|0.52865146|  PASSED  
+         rgb_bitdist|   3|    100000|     100|0.12255423|  PASSED  
+         rgb_bitdist|   4|    100000|     100|0.49673778|  PASSED  
+         rgb_bitdist|   5|    100000|     100|0.19251975|  PASSED  
+         rgb_bitdist|   6|    100000|     100|0.25783015|  PASSED  
+         rgb_bitdist|   7|    100000|     100|0.51611580|  PASSED  
+         rgb_bitdist|   8|    100000|     100|0.45255583|  PASSED  
+         rgb_bitdist|   9|    100000|     100|0.95123390|  PASSED  
+         rgb_bitdist|  10|    100000|     100|0.52790516|  PASSED  
+         rgb_bitdist|  11|    100000|     100|0.63418730|  PASSED  
+         rgb_bitdist|  12|    100000|     100|0.89886918|  PASSED  
+rgb_minimum_distance|   2|     10000|    1000|0.38531021|  PASSED  
+rgb_minimum_distance|   3|     10000|    1000|0.21840745|  PASSED  
+rgb_minimum_distance|   4|     10000|    1000|0.50318433|  PASSED  
+rgb_minimum_distance|   5|     10000|    1000|0.99876321|   WEAK   
+    rgb_permutations|   2|    100000|     100|0.85250431|  PASSED  
+    rgb_permutations|   3|    100000|     100|0.92195330|  PASSED  
+    rgb_permutations|   4|    100000|     100|0.56457243|  PASSED  
+    rgb_permutations|   5|    100000|     100|0.22225069|  PASSED  
+      rgb_lagged_sum|   0|   1000000|     100|0.76375240|  PASSED  
+      rgb_lagged_sum|   1|   1000000|     100|0.14184831|  PASSED  
+      rgb_lagged_sum|   2|   1000000|     100|0.00965452|  PASSED  
+      rgb_lagged_sum|   3|   1000000|     100|0.98527979|  PASSED  
+      rgb_lagged_sum|   4|   1000000|     100|0.43745099|  PASSED  
+      rgb_lagged_sum|   5|   1000000|     100|0.89793745|  PASSED  
+      rgb_lagged_sum|   6|   1000000|     100|0.39595103|  PASSED  
+      rgb_lagged_sum|   7|   1000000|     100|0.89462275|  PASSED  
+      rgb_lagged_sum|   8|   1000000|     100|0.57025991|  PASSED  
+      rgb_lagged_sum|   9|   1000000|     100|0.91383455|  PASSED  
 ```
 
 Of course, it is not a good idea to use *cryptic-sequences* as a pseudo-random number

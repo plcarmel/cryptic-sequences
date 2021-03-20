@@ -16,12 +16,7 @@ fun simpleEncryptionAlgo40(
       NumberBasedEncryptionAlgoFrom(
         baseSystem,
         MultiPassEncryptionAlgo(
-          CombineEncryptionAlgo(
-            listOf(
               OverlapEncryptionAlgo(wordSize, shuffledCycleEncryptionAlgo(baseSystem, prng)),
-              RotateEncryptionAlgo(wordSize)
-            )
-          ),
           nbPasses
         )
       )
