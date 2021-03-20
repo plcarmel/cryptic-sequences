@@ -2,8 +2,10 @@
 
 # cryptic-sequences
 
-Note: The library is close to being production ready, but it is not there yet. It is a matter of days, though, before
-the first release is built.
+**Note:** The library is close to being production ready, but it is not there yet. It is a matter of
+days, though, before the first release is made. I want to do everything I can to make sure the algorithm
+passes as many statistical tests as possible before someone starts using it in production and end-up with
+stuck with a suboptimal algorithm.
 
 ## What
 
@@ -225,7 +227,8 @@ A substitution sets one digit of the result, and the second digit influences
 the next substitution. Substitution are compounded and that's what makes the
 last digits of the word take values that appear so random. 
 
-**Note on reversibility:**
+**Note on reversibility**
+
 Since all substitutions are reversible operations, the operation as
 a whole is also reversible. Of course, the table, as it is, makes it somewhat
 hard. In practice, an inverse table is used to perform the decryption.
@@ -237,34 +240,19 @@ attention. Last digits are shuffled pretty well, but the first ones, not
 so much. All words that start with *00* will always end-up being encrypted
 to a word starting with *6*. That's not acceptable.
 
-The way to fix this is to do multiple passes. Also, we will rotate the whole
-word to the left, so that the least shuffled digit will be the best shuffled
-one on the next pass.
-
-Let continue our encryption...
-
-```
-6  7  7  5    rotate to the left
-
-▼  ▼
-7  7  5  6    t[7][7] = 16
-
-   ▼  ▼
-1  6  5  6    t[6][5] = 82  
-
-      ▼  ▼
-1  8  2  3    t[2][3] = 38 
-
-1  9  3  8    rotate to the left (end of second pass)
-
-9  3  8  1    that's the result at the end of the second pass
-```
+The way to fix this is to do multiple passes. A tried a lot of things
+to improve on this approach, like applying passes in different directions,
+rotating the word, etc., but nothing beats applying the algorithm
+multiple times. Everything else only added complexity with no clear
+benefits in terms of performance.
 
 Now, how many passes should be done to have something that appears truly random ?
-It depends on the size of the table used to shuffle the digits. For small base
-systems, tables having additional dimensions are used, so that the table size
-is of at least 100 elements. In practices, using hexadecimal digits, 10 passes
-is enough to pass all the *dieharder* randomness tests.
+It depends on the size of the table used to shuffle the digits, and on the size
+of the word. For small base systems, tables having additional dimensions are used,
+so that the table size is of at least 100 elements. In practices, using hexadecimal
+digits, 12 passes is enough to pass all the *dieharder* randomness tests.
+
+**Note on the Dieharder test suite**
 
 *Dieharder* is a program that allows one to evaluate the quality of a random number
 generator using a suite of statistical tests. Those test include the famous
