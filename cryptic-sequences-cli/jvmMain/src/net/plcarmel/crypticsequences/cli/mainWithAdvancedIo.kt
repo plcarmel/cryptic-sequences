@@ -18,7 +18,7 @@ fun printText(
 
 fun main(args: Array<String>) {
   val parser = ArgParser("cryptic-sequences-cli")
-  val options = Options(parser)
+  val options = OptionsWithAdvancedIo(parser)
   parser.parse(args)
   val iterator = options.createIterator()
   val output = options.output ?.let { FileOutputStream(it) } ?: FileOutputStream(FileDescriptor.out)

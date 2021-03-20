@@ -1,4 +1,14 @@
+pluginManagement {
+  repositories {
+    mavenCentral()
+    gradlePluginPortal()
+  }
+
+  plugins {
+    id("org.jetbrains.kotlin.multiplatform") version "$kotlinVersion"
+  }
+}
+
 rootProject.name = 'cryptic-sequences'
 include ':cryptic-sequences-core'
 include ':cryptic-sequences-cli'
-

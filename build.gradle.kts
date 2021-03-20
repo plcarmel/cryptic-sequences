@@ -11,7 +11,7 @@ buildscript {
 }
 
 plugins {
-  kotlin("multiplatform") version("1.4.31")
+  kotlin("multiplatform")
 }
 
 kotlin {

@@ -9,17 +9,33 @@ kotlin {
 
   jvm()
 
+  val nativeTarget = linuxX64()
+
+  nativeTarget.apply {
+    binaries {
+      executable {
+        entryPoint = "net.plcarmel.crypticsequences.cli.mainWithBasicIo"
+      }
+    }
+  }
+
   sourceSets {
     @Suppress("UNUSED_VARIABLE")
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-common")
+        implementation(kotlin("stdlib-common"))
         implementation(project(":cryptic-sequences-core"))
         implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
       }
     }
     @Suppress("UNUSED_VARIABLE")
     val jvmMain by getting {
+      dependencies {
+        implementation(kotlin("stdlib-jdk8"))
+      }
+    }
+    @Suppress("UNUSED_VARIABLE")
+    val linuxX64Main by getting {
       dependencies {
         implementation(kotlin("stdlib-jdk8"))
       }
