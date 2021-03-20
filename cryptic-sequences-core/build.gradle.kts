@@ -5,7 +5,10 @@ plugins {
 kotlin {
 
   jvm()
-  linuxX64("native")
+  linuxX64()
+  mingwX86()
+  mingwX64()
+  macosX64()
 
   sourceSets {
     @Suppress("UNUSED_VARIABLE")

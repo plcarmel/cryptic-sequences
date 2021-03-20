@@ -8,13 +8,25 @@ plugins {
 kotlin {
 
   jvm()
+  val linux64Target = linuxX64()
+  val windows32Target = mingwX86()
+  val windows64Target = mingwX64()
+  val macOsTarget = macosX64()
 
-  val nativeTarget = linuxX64()
+  val partiallySupportedTargets =
+    listOf(
+      linux64Target,
+      windows32Target,
+      windows64Target,
+      macOsTarget
+    )
 
-  nativeTarget.apply {
-    binaries {
-      executable {
-        entryPoint = "net.plcarmel.crypticsequences.cli.mainWithBasicIo"
+  partiallySupportedTargets.forEach {
+    it.apply {
+      binaries {
+        executable {
+          entryPoint = "net.plcarmel.crypticsequences.cli.mainWithBasicIo"
+        }
       }
     }
   }
