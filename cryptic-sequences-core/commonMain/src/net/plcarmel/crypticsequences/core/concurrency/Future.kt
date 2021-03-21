@@ -1,8 +1,7 @@
 package net.plcarmel.crypticsequences.core.concurrency
 
-interface Semaphore {
+interface Future<T> {
 
-  fun acquire()
-  fun release()
+  val result: T
 
 }
