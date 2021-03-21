@@ -5,7 +5,7 @@ package net.plcarmel.crypticsequences.core.sequences
 import net.plcarmel.crypticsequences.core.numbers.BinaryBaseSystem
 
 class CrypticBinaryBlockIterator(
-  val baseIterator: CrypticLongIterator,
+  val baseIterator: Iterator<Long>,
   val nbBytesPerWord: Int,
   val nbWordsPerBlock: Int
 ) : Iterator<ByteArray> {

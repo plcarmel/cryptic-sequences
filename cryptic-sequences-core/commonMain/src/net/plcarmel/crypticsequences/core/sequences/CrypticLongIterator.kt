@@ -2,11 +2,12 @@
 
 package net.plcarmel.crypticsequences.core.sequences
 
-class CrypticLongIterator(
-  val baseIterator: CrypticIterator
-): Iterator<Long> {
+import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 
-  val baseSystem = baseIterator.encryptionAlgo.baseSystem
+class CrypticLongIterator(
+  val baseIterator: Iterator<ByteArray>,
+  val baseSystem: BaseSystem
+): Iterator<Long> {
 
   override fun hasNext(): Boolean = baseIterator.hasNext()
 

@@ -1,6 +1,12 @@
+@file:OptIn(ExperimentalCli::class, ExperimentalUnsignedTypes::class)
 package net.plcarmel.crypticsequences.cli
 
-@OptIn(ExperimentalUnsignedTypes::class)
-fun main(args: Array<String>) {
-  mainWithAdvancedIo(JavaOutputSystem.instance, args)
-}
+import kotlinx.cli.ExperimentalCli
+import net.plcarmel.crypticsequences.core.concurrency.JavaConcurrencyLayer
+
+fun main(args: Array<String>) =
+  mainWithAdvancedIo(
+    JavaOutputLayer.instance,
+    JavaConcurrencyLayer.instance,
+    args
+  )

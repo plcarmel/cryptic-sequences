@@ -1,5 +1,6 @@
 package net.plcarmel.crypticsequences.core.sequences
 
+/*
 import net.plcarmel.crypticsequences.core.encryption.definitions.NumberBasedEncryptionAlgo
 import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -42,10 +43,10 @@ class CrypticIteratorTest {
     val iterator =
       CrypticIterator(
         newEncryptionAlgoWithBaseSystemThatHasSevenValues(),
-        currentIndex = currentIndex,
+        startAt = currentIndex,
         count = desiredCount
       )
-    assertEquals(expectedCount, iterator.count)
+    assertEquals(expectedCount, iterator.bound)
   }
 
   @Test
@@ -53,7 +54,7 @@ class CrypticIteratorTest {
     val iterator =
       CrypticIterator(
         newEncryptionAlgoWithBaseSystemThatHasSevenValues(),
-        currentIndex = 4567,
+        startAt = 4567,
         count = 0
       )
     assertFalse(iterator.hasNext())
@@ -66,14 +67,14 @@ class CrypticIteratorTest {
     val iterator =
       CrypticIterator(
         encryptionAlgo,
-        currentIndex = 1,
+        startAt = 1,
         count = 5
       )
     assertEquals(iterator.currentIndex, 1)
-    assertEquals(iterator.count, 5)
+    assertEquals(iterator.bound, 5)
     iterator.next()
     assertEquals(iterator.currentIndex, 2)
-    assertEquals(iterator.count, 4)
+    assertEquals(iterator.bound, 4)
     val tokenArray = ByteArray(0)
     verify(encryptionAlgo.baseSystem)
       .extractDigitsAt(eq(byteArrayOf(0, 0, 0)) ?: tokenArray, eq(1L), eq(0), eq(3))
@@ -82,3 +83,5 @@ class CrypticIteratorTest {
   }
 
 }
+
+ */

@@ -3,7 +3,9 @@ package net.plcarmel.crypticsequences.cli
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import net.plcarmel.crypticsequences.core.encryption.implementations.simpleEncryptionAlgo40
+import net.plcarmel.crypticsequences.core.encryption.definitions.NumberBasedEncryptionAlgo
+import net.plcarmel.crypticsequences.core.encryption.implementations.MultiPassOverlapEncryptionAlgo
+import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 import net.plcarmel.crypticsequences.core.numbers.BinaryBaseSystem
 import net.plcarmel.crypticsequences.core.numbers.GenericBaseSystem
 import net.plcarmel.crypticsequences.core.numbers.NumberRepresentationSystem
@@ -12,22 +14,29 @@ import kotlin.random.Random
 
 open class OptionsWithBasicIo(parser: ArgParser) {
 
-  fun createIterator(): CrypticIterator {
-    val baseSystem =
+  val baseSystem: BaseSystem
+    get() =
       if (base.countOneBits() == 1) BinaryBaseSystem(base.countTrailingZeroBits())
       else GenericBaseSystem(base)
+
+  protected val computedCount: Long
+    get() = count?.toLong() ?: baseSystem.nbValues(size)
+
+  protected fun createAlgo(): NumberBasedEncryptionAlgo {
     val random = Random(NumberRepresentationSystem.mime64.parseToLong(key))
-    return CrypticIterator(
-      simpleEncryptionAlgo40(
-        baseSystem = baseSystem,
-        wordSize = size,
-        prng = random,
-        nbPasses = strength,
-      ),
-      currentIndex = start.toLong(),
-      count = count?.toLong() ?: baseSystem.nbValues(size)
+    return MultiPassOverlapEncryptionAlgo(
+      baseSystem = baseSystem,
+      wordSize = size,
+      prng = random,
+      nbPasses = strength,
     )
   }
+
+  private fun createIterator(algo: NumberBasedEncryptionAlgo): CrypticIterator {
+    return CrypticIterator(algo, startAt = start.toLong(), count = computedCount)
+  }
+
+  fun createIterator(): CrypticIterator = createIterator(createAlgo())
 
   val representationSystem
     get() =
@@ -68,7 +77,7 @@ open class OptionsWithBasicIo(parser: ArgParser) {
         "The 48 bits key to use to encrypt the sequence, in base 64 (up to 6 digits)."
     ).default("")
 
-  private val start by
+  protected val start by
     parser.option(
         ArgType.Int,
       fullName = "start",

@@ -1,6 +1,6 @@
 package net.plcarmel.crypticsequences.cli
 
-interface OutputSystem {
+interface OutputLayer {
 
   fun openStdOut(): OutputFile
   fun open(path: String): OutputFile

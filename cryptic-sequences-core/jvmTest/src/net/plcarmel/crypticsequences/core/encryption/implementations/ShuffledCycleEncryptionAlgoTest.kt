@@ -1,5 +1,6 @@
 package net.plcarmel.crypticsequences.core.encryption.implementations
 
+import net.plcarmel.crypticsequences.core.encryption.implementations.ShuffledCycleEncryptionAlgo.Companion.computeDefaultTableDimensions
 import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest

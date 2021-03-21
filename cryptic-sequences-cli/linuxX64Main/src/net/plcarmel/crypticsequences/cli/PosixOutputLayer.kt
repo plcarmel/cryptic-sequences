@@ -3,10 +3,10 @@ package net.plcarmel.crypticsequences.cli
 import platform.posix.fopen
 import platform.posix.stdout
 
-class PosixOutputSystem private constructor() : OutputSystem {
+class PosixOutputLayer private constructor() : OutputLayer {
 
   companion object {
-    val instance = PosixOutputSystem()
+    val instance = PosixOutputLayer()
   }
 
   override fun openStdOut(): OutputFile =
