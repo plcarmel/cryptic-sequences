@@ -5,6 +5,10 @@ plugins {
   id("com.github.johnrengelman.shadow") version("6.1.0")
 }
 
+repositories {
+  maven { url = uri("https://kotlin.bintray.com/kotlinx") }
+}
+
 kotlin {
 
   jvm()
@@ -45,12 +49,18 @@ kotlin {
     }
   }
 
+  sourceSets.all {
+    kotlin.setSrcDirs(listOf("$name/src"))
+    resources.setSrcDirs(listOf("$name/resources"))
+  }
+
   sourceSets {
     @Suppress("UNUSED_VARIABLE")
     val commonMain by getting {
       dependencies {
         implementation(kotlin("stdlib-common"))
         implementation(project(":cryptic-sequences-core"))
+        implementation(project(":cryptic-sequences-mt"))
         implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
       }
     }
@@ -60,13 +70,6 @@ kotlin {
         implementation(kotlin("stdlib-jdk8"))
       }
     }
-  }
-
-
-
-  sourceSets.all {
-    kotlin.setSrcDirs(listOf("$name/src"))
-    resources.setSrcDirs(listOf("$name/resources"))
   }
 
   repositories {

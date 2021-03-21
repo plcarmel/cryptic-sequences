@@ -10,11 +10,20 @@ kotlin {
   mingwX64()
   macosX64()
 
+  sourceSets.all {
+    kotlin.setSrcDirs(listOf("$name/src"))
+    resources.setSrcDirs(listOf("$name/resources"))
+    languageSettings.apply {
+      useExperimentalAnnotation("kotlin.Experimental")
+    }
+  }
+
   sourceSets {
     @Suppress("UNUSED_VARIABLE")
     val commonMain by getting {
       dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-common")
+        implementation(project(":cryptic-sequences-core"))
       }
     }
     @Suppress("UNUSED_VARIABLE")
@@ -27,37 +36,6 @@ kotlin {
         implementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
         runtimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")
       }
-    }
-
-    sourceSets.all {
-      kotlin.setSrcDirs(listOf("$name/src"))
-      resources.setSrcDirs(listOf("$name/resources"))
-      languageSettings.apply {
-        useExperimentalAnnotation("kotlin.Experimental")
-      }
-    }
-
-    sourceSets {
-      @Suppress("UNUSED_VARIABLE")
-      commonMain {
-        dependencies {
-          implementation(kotlin("stdlib-common"))
-        }
-      }
-    }
-
-  }
-
-  tasks.named<Test>("jvmTest") {
-    useJUnitPlatform()
-    testLogging {
-      showExceptions = true
-      showStandardStreams = true
-      events = setOf(
-        org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
-        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
-      )
-      exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
   }
 
