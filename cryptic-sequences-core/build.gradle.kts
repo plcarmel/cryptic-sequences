@@ -28,24 +28,14 @@ kotlin {
         runtimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")
       }
     }
+  }
 
-    sourceSets.all {
-      kotlin.setSrcDirs(listOf("$name/src"))
-      resources.setSrcDirs(listOf("$name/resources"))
-      languageSettings.apply {
-        useExperimentalAnnotation("kotlin.Experimental")
-      }
+  sourceSets.all {
+    kotlin.setSrcDirs(listOf("$name/src"))
+    resources.setSrcDirs(listOf("$name/resources"))
+    languageSettings.apply {
+      useExperimentalAnnotation("kotlin.Experimental")
     }
-
-    sourceSets {
-      @Suppress("UNUSED_VARIABLE")
-      commonMain {
-        dependencies {
-          implementation(kotlin("stdlib-common"))
-        }
-      }
-    }
-
   }
 
   tasks.named<Test>("jvmTest") {
