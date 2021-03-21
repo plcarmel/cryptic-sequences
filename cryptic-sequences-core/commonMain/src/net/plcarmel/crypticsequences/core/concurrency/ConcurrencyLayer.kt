@@ -6,4 +6,6 @@ interface ConcurrencyLayer {
 
   fun <T> futureOf(x: T): Future<T>
 
+  fun <T> freeze(x: T): T = x
+
 }

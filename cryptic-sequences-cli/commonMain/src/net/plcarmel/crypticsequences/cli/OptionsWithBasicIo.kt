@@ -61,7 +61,7 @@ open class OptionsWithBasicIo(parser: ArgParser) {
         "The base to use for generated values."
     ).default(10)
 
-  private val size by
+  val size by
     parser.option(
         ArgType.Int,
       fullName = "size",

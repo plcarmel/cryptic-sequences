@@ -2,7 +2,6 @@ package net.plcarmel.crypticsequences.cli
 
 import kotlinx.cli.ArgParser
 import net.plcarmel.crypticsequences.core.sequences.CrypticBinaryBlockIterator
-import net.plcarmel.crypticsequences.core.sequences.CrypticLongIterator
 import net.plcarmel.crypticsequences.core.concurrency.ConcurrencyLayer
 
 fun mainWithAdvancedIo(
@@ -19,10 +18,11 @@ fun mainWithAdvancedIo(
   try {
     if (byteCount == null ) {
       val representationSystem = options.representationSystem
-      iterator.asSequence().map(representationSystem::format).forEach(output::println)
+      val wordSize = options.size
+      iterator.asSequence().map { representationSystem.format(wordSize, it) }.forEach(output::println)
     } else {
       CrypticBinaryBlockIterator(
-        CrypticLongIterator(iterator, options.baseSystem),
+        iterator,
         byteCount,
         options.blockSize
       ).forEach(output::write)

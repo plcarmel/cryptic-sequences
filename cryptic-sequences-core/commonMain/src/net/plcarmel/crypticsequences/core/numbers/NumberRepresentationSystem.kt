@@ -18,6 +18,12 @@ class NumberRepresentationSystem(
   fun format(digits: ByteArray): String =
     digits.reversed().map(Byte::toInt).map(::digitToSymbol).toCharArray().concatToString()
 
+  fun format(nbDigits: Int, word: Long): String {
+    val digits = ByteArray(nbDigits)
+    baseSystem.extractDigitsAt(digits, word)
+    return format(digits)
+  }
+
   @Suppress("MemberVisibilityCanBePrivate")
   fun parse(representation: CharArray): ByteArray =
     representation.map(::symbolToDigit).reversed().toByteArray()

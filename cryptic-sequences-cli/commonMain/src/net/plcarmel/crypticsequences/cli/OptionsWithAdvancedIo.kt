@@ -12,7 +12,7 @@ class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser) {
   private fun createIterator(
     concurrencyLayer: ConcurrencyLayer,
     algo: NumberBasedEncryptionAlgo
-  ): Iterator<ByteArray> {
+  ): Iterator<Long> {
     return ParallelizedCrypticSequenceIterator(
       algo,
       startAt = start.toLong(),
@@ -22,7 +22,7 @@ class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser) {
     )
   }
 
-  fun createIterator(concurrencyLayer: ConcurrencyLayer): Iterator<ByteArray> =
+  fun createIterator(concurrencyLayer: ConcurrencyLayer): Iterator<Long> =
     createIterator(concurrencyLayer, createAlgo())
 
   val output by

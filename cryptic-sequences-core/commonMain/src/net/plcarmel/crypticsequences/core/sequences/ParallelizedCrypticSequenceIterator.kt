@@ -10,12 +10,12 @@ class ParallelizedCrypticSequenceIterator(
   private var concurrencyLayer: ConcurrencyLayer,
   nbThreads: Long = 1,
   private val bufferSize: Int = 65536
-) : Iterator<ByteArray> {
+) : Iterator<Long> {
 
   private val indices = (0 until nbThreads.toInt())
   private val workers = indices.map { concurrencyLayer.createWorker() }.toTypedArray()
-  private val nextBlocks = indices.map { concurrencyLayer.futureOf(listOf<ByteArray>()) }.toTypedArray()
-  private val currentBlocks = indices.map { concurrencyLayer.futureOf(listOf<ByteArray>()) }.toTypedArray()
+  private val nextBlocks = indices.map { concurrencyLayer.futureOf(longArrayOf()) }.toTypedArray()
+  private val currentBlocks = indices.map { longArrayOf() }.toTypedArray()
   private var currentBlockIndex = 0
   private var currentBlock = 0
 
@@ -23,6 +23,8 @@ class ParallelizedCrypticSequenceIterator(
   var assignedCount = count
 
   init {
+    concurrencyLayer.freeze(concurrencyLayer)
+    concurrencyLayer.freeze(encryptionAlgo)
     newIteration()
     newIteration()
   }
@@ -36,17 +38,26 @@ class ParallelizedCrypticSequenceIterator(
   }
 
   private fun launchNewComputation(i: Int, range: LongRange) {
+    concurrencyLayer.freeze(range)
     nextBlocks[i] =
       if (range.first <= range.last) {
         workers[i].execute {
-          val iterator = CrypticIterator(encryptionAlgo, range.first, range.last - range.first + 1)
-          iterator.asSequence().toList()
+          val baseSystem = encryptionAlgo.baseSystem
+          val wordSize = encryptionAlgo.wordSize
+          val bytes = ByteArray(size = wordSize)
+          concurrencyLayer.freeze(
+            range.asSequence().map {
+              baseSystem.extractDigitsAt(bytes, it, 0, encryptionAlgo.wordSize)
+              encryptionAlgo.encrypt(bytes)
+              baseSystem.combineDigitsFrom(bytes)
+            }.toList().toLongArray()
+          )
         }
-      } else concurrencyLayer.futureOf(listOf())
+      } else concurrencyLayer.futureOf(longArrayOf())
   }
 
   private fun newIteration() {
-    indices.forEach { currentBlocks[it] = nextBlocks[it] }
+    indices.forEach { currentBlocks[it] = nextBlocks[it].result }
     indices.forEach { launchNewComputation(it, computeNewIndicesToAssign()) }
     currentBlock = 0
   }
@@ -61,17 +72,17 @@ class ParallelizedCrypticSequenceIterator(
 
   }
 
-  override fun next(): ByteArray {
+  override fun next(): Long {
     if (
       currentBlock <= indices.last
-      && currentBlockIndex == currentBlocks[currentBlock].result.size
+      && currentBlockIndex == currentBlocks[currentBlock].size
     ) {
       nextBlock()
     }
     if (currentBlock > indices.last) {
       newIteration()
     }
-    val result = currentBlocks[currentBlock].result[currentBlockIndex++]
+    val result = currentBlocks[currentBlock][currentBlockIndex++]
     count--
     if (!hasNext()) {
       workers.forEach(Worker::shutdown)
