@@ -6,7 +6,10 @@ interface Queue<T> {
   fun pop(): T
   val size: Int
 
+  val isEmpty
+    get() = size == 0
+
   fun cancelPush()
-  fun cancelPop(x: T)
+  fun cancelPop()
 
 }

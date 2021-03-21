@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalUnsignedTypes::class)
-
 package net.plcarmel.crypticsequences.cli
 
 import kotlinx.cinterop.CPointer
@@ -9,6 +7,7 @@ import platform.posix.fclose
 import platform.posix.fflush
 import platform.posix.fwrite
 
+@ExperimentalUnsignedTypes
 class PosixOutputFile(private val file : CPointer<FILE>) : OutputFile {
 
   companion object {

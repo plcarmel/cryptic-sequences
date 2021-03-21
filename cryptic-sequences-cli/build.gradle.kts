@@ -60,21 +60,13 @@ kotlin {
         implementation(kotlin("stdlib-jdk8"))
       }
     }
-    @Suppress("UNUSED_VARIABLE")
-    val linuxX64Main by getting {
-      dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-      }
-    }
   }
+
+
 
   sourceSets.all {
     kotlin.setSrcDirs(listOf("$name/src"))
     resources.setSrcDirs(listOf("$name/resources"))
-    languageSettings.apply {
-      useExperimentalAnnotation("kotlin.Experimental")
-      useExperimentalAnnotation("kotlinx.cli.ExperimentalCli")
-    }
   }
 
   repositories {

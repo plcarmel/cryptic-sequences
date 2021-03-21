@@ -1,11 +1,8 @@
-@file:OptIn(ExperimentalCli::class, ExperimentalUnsignedTypes::class)
-
 package net.plcarmel.crypticsequences.cli
 
 import kotlinx.cli.ArgParser
 import net.plcarmel.crypticsequences.core.sequences.CrypticBinaryBlockIterator
 import net.plcarmel.crypticsequences.core.sequences.CrypticLongIterator
-import kotlinx.cli.ExperimentalCli
 import net.plcarmel.crypticsequences.core.concurrency.ConcurrencyLayer
 
 fun mainWithAdvancedIo(

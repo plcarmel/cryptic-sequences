@@ -2,7 +2,7 @@ package net.plcarmel.crypticsequences.core.concurrency
 
 class PipeImpl<T>(concurrencyLayer: ConcurrencyLayer, maxSize: Int) : Pipe<T, T> {
 
-  private val queue = concurrencyLayer.concurrentQueue<T>()
+  private val queue = concurrencyLayer.queue<T>(maxSize)
   private var isClosed: Boolean = false
 
   private val supplySideSemaphore = concurrencyLayer.createSemaphore(maxSize)
@@ -32,7 +32,7 @@ class PipeImpl<T>(concurrencyLayer: ConcurrencyLayer, maxSize: Int) : Pipe<T, T>
         supplySideSemaphore.release()
         return x
       } catch (e: Exception) {
-        queue.cancelPop(x)
+        queue.cancelPop()
         throw e
       }
     } catch (e: Exception) {
@@ -42,7 +42,7 @@ class PipeImpl<T>(concurrencyLayer: ConcurrencyLayer, maxSize: Int) : Pipe<T, T>
   }
 
   override val hasNext: Boolean
-    get() = queue.size != 0 || !isClosed
+    get() = !queue.isEmpty || !isClosed
 
   override fun close() {
     isClosed = true
