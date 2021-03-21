@@ -13,3 +13,4 @@ rootProject.name = 'cryptic-sequences'
 include 'cryptic-sequences-core'
 include 'cryptic-sequences-cli'
 include 'cryptic-sequences-mt'
+
