@@ -85,10 +85,13 @@ class ParallelizedCrypticSequenceIterator(
     val result = currentBlocks[currentBlock][currentBlockIndex++]
     count--
     if (!hasNext()) {
-      workers.forEach(Worker::shutdown)
+      destroy()
     }
     return result
   }
 
+  fun destroy() {
+    workers.forEach(Worker::shutdown)
+  }
 
 }
