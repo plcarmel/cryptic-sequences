@@ -8,11 +8,11 @@ class ParallelizedCrypticSequenceIterator(
   startAt: Long = 0,
   private var count: Long = encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize),
   private var concurrencyLayer: ConcurrencyLayer,
-  nbThreads: Long = 1,
+  nbThreads: Int = 1,
   private val bufferSize: Int = 65536
 ) : Iterator<Long> {
 
-  private val indices = (0 until nbThreads.toInt())
+  private val indices = (0 until nbThreads)
   private val workers = indices.map { concurrencyLayer.createWorker() }.toTypedArray()
   private val nextBlocks = indices.map { concurrencyLayer.futureOf(longArrayOf()) }.toTypedArray()
   private val currentBlocks = indices.map { longArrayOf() }.toTypedArray()
