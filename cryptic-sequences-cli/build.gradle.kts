@@ -13,6 +13,12 @@ kotlin {
   val windows64Target = mingwX64()
   val macOsTarget = macosX64()
 
+  linuxX64 {
+    val main by compilations.getting
+    val interop by main.cinterops.creating
+    interop.defFile = File("${project.projectDir}/nativeInterop/src/cinterop/interop.def")
+  }
+
   val partiallySupportedTargets =
     listOf(
       windows32Target,
@@ -20,7 +26,7 @@ kotlin {
       macOsTarget
     )
 
-  val posixTargets =
+  val supportedPosixTargets =
     listOf(
       linux64Target
     )
@@ -35,7 +41,7 @@ kotlin {
     }
   }
 
-  posixTargets.forEach {
+  supportedPosixTargets.forEach {
     it.apply {
       binaries {
         executable {
@@ -58,6 +64,12 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         implementation(kotlin("stdlib-jdk8"))
+      }
+    }
+    @Suppress("UNUSED_VARIABLE")
+    val linuxX64Main by getting {
+      dependencies {
+        implementation(project(":cryptic-sequences-core"))
       }
     }
   }

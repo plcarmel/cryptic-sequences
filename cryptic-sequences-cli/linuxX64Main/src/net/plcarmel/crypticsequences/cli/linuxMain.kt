@@ -2,7 +2,6 @@ package net.plcarmel.crypticsequences.cli
 
 import net.plcarmel.crypticsequences.core.concurrency.KotlinNativeConcurrencyLayer
 
-fun main(args: Array<String>) =
-  // mainWithBasicIo(args)
-  mainWithAdvancedIo(PosixOutputLayer.instance, KotlinNativeConcurrencyLayer.instance, args)
+val linux64Layer = PlatformSpecificLayer(PosixOutputLayer.instance, KotlinNativeConcurrencyLayer.instance)
 
+fun main(args: Array<String>) = mainWithAdvancedIo(linux64Layer, args, ::OptionsWithTestU01)

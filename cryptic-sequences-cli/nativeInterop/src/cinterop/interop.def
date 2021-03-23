@@ -1,0 +1,4 @@
+package = testu01
+headers = /usr/local/include/bbattery.h
+compilerOpts = -I/usr/local/include
+linkerOpts = -L/usr/local/lib -ltestu01

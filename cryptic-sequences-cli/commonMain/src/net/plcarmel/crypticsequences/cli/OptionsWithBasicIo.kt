@@ -14,45 +14,6 @@ import kotlin.random.Random
 
 open class OptionsWithBasicIo(parser: ArgParser) {
 
-  val baseSystem: BaseSystem
-    get() =
-      if (base.countOneBits() == 1) BinaryBaseSystem(base.countTrailingZeroBits())
-      else GenericBaseSystem(base)
-
-  protected val computedCount: Long
-    get() = count?.toLong() ?: baseSystem.nbValues(size)
-
-  protected fun createAlgo(): NumberBasedEncryptionAlgo {
-    val random = Random(NumberRepresentationSystem.mime64.parseToLong(key))
-    return MultiPassOverlapEncryptionAlgo(
-      baseSystem = baseSystem,
-      wordSize = size,
-      prng = random,
-      nbPasses = strength,
-    )
-  }
-
-  private fun createIterator(algo: NumberBasedEncryptionAlgo): CrypticIterator {
-    return CrypticIterator(algo, startAt = start.toLong(), count = computedCount)
-  }
-
-  fun createIterator(): CrypticIterator = createIterator(createAlgo())
-
-  val representationSystem
-    get() =
-      when {
-        base == 2 -> NumberRepresentationSystem.binary
-        base == 8 -> NumberRepresentationSystem.octal
-        base == 10 -> NumberRepresentationSystem.decimal
-        base == 16 -> NumberRepresentationSystem.hexadecimal
-        base < 16 -> NumberRepresentationSystem(NumberRepresentationSystem.hexadecimal.symbols.take(base).toCharArray())
-        base == 32 -> NumberRepresentationSystem.base32hex
-        base < 32 -> NumberRepresentationSystem(NumberRepresentationSystem.base32hex.symbols.take(base).toCharArray())
-        base == 64 -> NumberRepresentationSystem.mime64
-        base < 64 -> NumberRepresentationSystem(NumberRepresentationSystem.mime64.symbols.take(base).toCharArray())
-        else -> throw IllegalArgumentException("Base $base is not valid or is not supported")
-      }
-
   private val base by
     parser.option(
         ArgType.Int,
@@ -61,7 +22,7 @@ open class OptionsWithBasicIo(parser: ArgParser) {
         "The base to use for generated values."
     ).default(10)
 
-  val size by
+  protected val size by
     parser.option(
         ArgType.Int,
       fullName = "size",
@@ -100,4 +61,52 @@ open class OptionsWithBasicIo(parser: ArgParser) {
       description =
         "The number of generated values."
     )
+
+  protected val baseSystem: BaseSystem
+    get() =
+      if (base.countOneBits() == 1) BinaryBaseSystem(base.countTrailingZeroBits())
+      else GenericBaseSystem(base)
+
+  protected val computedCount: Long
+    get() = count?.toLong() ?: baseSystem.nbValues(size)
+
+  protected fun createAlgo(): NumberBasedEncryptionAlgo {
+    val random = Random(NumberRepresentationSystem.mime64.parseToLong(key))
+    return MultiPassOverlapEncryptionAlgo(
+      baseSystem = baseSystem,
+      wordSize = size,
+      prng = random,
+      nbPasses = strength,
+    )
+  }
+
+  private fun createIterator(algo: NumberBasedEncryptionAlgo): CrypticIterator {
+    return CrypticIterator(algo, startAt = start.toLong(), count = computedCount)
+  }
+
+  private fun createIterator(): CrypticIterator = createIterator(createAlgo())
+
+  val representationSystem
+    get() =
+      when {
+        base == 2 -> NumberRepresentationSystem.binary
+        base == 8 -> NumberRepresentationSystem.octal
+        base == 10 -> NumberRepresentationSystem.decimal
+        base == 16 -> NumberRepresentationSystem.hexadecimal
+        base < 16 -> NumberRepresentationSystem(NumberRepresentationSystem.hexadecimal.symbols.take(base).toCharArray())
+        base == 32 -> NumberRepresentationSystem.base32hex
+        base < 32 -> NumberRepresentationSystem(NumberRepresentationSystem.base32hex.symbols.take(base).toCharArray())
+        base == 64 -> NumberRepresentationSystem.mime64
+        base < 64 -> NumberRepresentationSystem(NumberRepresentationSystem.mime64.symbols.take(base).toCharArray())
+        else -> throw IllegalArgumentException("Base $base is not valid or is not supported")
+      }
+
+  fun printNumbersOnStdOut() {
+    val iterator = createIterator()
+    val representationSystem = representationSystem
+    iterator.forEach { w ->
+      w.let(representationSystem::format).let(::println)
+    }
+  }
+
 }
