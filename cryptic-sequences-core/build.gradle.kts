@@ -7,7 +7,6 @@ plugins {
 kotlin {
 
   jvm()
-
   linuxX64()
   mingwX86()
   mingwX64()
@@ -52,51 +51,6 @@ kotlin {
       )
       exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
-  }
-
-  signing {
-    useGpgCmd()
-    sign(publishing.publications["jvm"])
-  }
-
-  publishing {
-
-    publications {
-
-      withType<MavenPublication>().configureEach {
-        groupId = properties["groupId"]!!.toString()
-        version = properties["version"]!!.toString()
-      }
-
-      named<MavenPublication>("jvm") {
-        pom {
-          name.set("cryptic-sequences core library")
-          description.set("Create small cyphers to generate random-looking unique ids")
-          url.set("https://github.com/plcarmel/cryptic-sequences")
-          licenses {
-            license {
-              name.set("MIT")
-              url.set("https://mit-license.org/")
-              distribution.set("repo")
-            }
-          }
-          scm {
-            url.set("https://github.com/plcarmel/cryptic-sequences")
-            connection.set("scm:git:git@github.com:plcarmel/cryptic-sequences.git")
-            developerConnection.set("scm:git:ssh:git@github.com:plcarmel/cryptic-sequences.git")
-          }
-        }
-      }
-
-    }
-
-    repositories {
-      maven {
-        name = "Staging"
-        url = uri("$buildDir/repos/staging")
-      }
-    }
-
   }
 }
 

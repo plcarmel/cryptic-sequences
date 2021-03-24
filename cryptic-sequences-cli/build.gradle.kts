@@ -2,6 +2,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
   kotlin("multiplatform")
+  id("maven-publish")
+  id("signing")
   id("com.github.johnrengelman.shadow") version("6.1.0")
 }
 
@@ -73,8 +75,6 @@ kotlin {
       }
     }
   }
-
-
 
   sourceSets.all {
     kotlin.setSrcDirs(listOf("$name/src"))
