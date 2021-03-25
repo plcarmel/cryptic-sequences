@@ -82,6 +82,14 @@ kotlin {
 
       repositories {
         maven {
+          name = "CentralSnapshot"
+          url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+          credentials {
+            username = properties["ossrhUsername"]!!.toString()
+            password = properties["ossrhPassword"]!!.toString()
+          }
+        }
+        maven {
           name = "Staging"
           url = uri("$buildDir/repos/staging")
         }
