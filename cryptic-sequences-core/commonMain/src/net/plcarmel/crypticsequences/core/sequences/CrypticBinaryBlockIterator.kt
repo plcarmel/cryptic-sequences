@@ -2,15 +2,19 @@
 
 package net.plcarmel.crypticsequences.core.sequences
 
+import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 import net.plcarmel.crypticsequences.core.numbers.BinaryBaseSystem
 
 class CrypticBinaryBlockIterator(
   val baseIterator: Iterator<Long>,
-  val nbBytesPerWord: Int,
-  val nbWordsPerBlock: Int
+  val baseSystem: BaseSystem,
+  val wordSize: Int,
+  val nbIntsPerBlock: Int
 ) : Iterator<ByteArray> {
 
-  private val blockSizeInBytes = nbBytesPerWord * nbWordsPerBlock
+  private val binaryIntIterator = CrypticBinaryIntIterator(baseIterator, baseSystem, wordSize)
+
+  private val blockSizeInBytes = 4 * nbIntsPerBlock
 
   override fun hasNext(): Boolean = baseIterator.hasNext()
 
@@ -19,15 +23,15 @@ class CrypticBinaryBlockIterator(
   override fun next(): ByteArray {
     val block = ByteArray(size = blockSizeInBytes)
     var i = 0
-    while (i < nbWordsPerBlock && baseIterator.hasNext()) {
+    while (i < nbIntsPerBlock && binaryIntIterator.hasNext()) {
       val word = baseIterator.next()
       base256.extractDigitsAt(
         target = block,
         word = word,
         start = i,
-        count = nbBytesPerWord
+        count = 4
       )
-      i += nbBytesPerWord
+      i += 4
     }
     return if (i == blockSizeInBytes) block else block.take(i).toByteArray()
   }

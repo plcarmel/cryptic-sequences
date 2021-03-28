@@ -47,13 +47,14 @@ open class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser)
     val output = openOutput(platformSpecificLayer.output)
     CrypticBinaryBlockIterator(
       baseIterator = createIterator(platformSpecificLayer.concurrency),
-      nbBytesPerWord = byteCount!!,
-      nbWordsPerBlock = blockSize
+      baseSystem = baseSystem,
+      wordSize = size,
+      nbIntsPerBlock = blockSize
     ).forEach(output::write)
   }
 
   open val task: (PlatformSpecificLayer) -> Unit
-    get() = if (byteCount == null ) ::printTextNumbers else ::writeBinaryBlocks
+    get() = if (binary) ::writeBinaryBlocks else ::printTextNumbers
 
   private val output by
     parser.option(
@@ -64,20 +65,20 @@ open class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser)
       "File where to write the data. The standard output is used otherwise."
     )
 
-  private val byteCount by
+  private val binary by
     parser.option(
-        ArgType.Int,
-      fullName = "byte-count",
-      description = "Output values in binary mode, using \"x\" bytes for each number, truncating them if necessary."
-    )
+      ArgType.Boolean,
+      fullName = "binary",
+      description = "Output random bits in binary mode, for the Dieharder test suite, for example.",
+    ).default(false)
 
   private val blockSize by
     parser.option(
       ArgType.Int,
       fullName = "block-size",
       description =
-        "Block size in values (not in bytes). When option \"byte-count\" is present and output is binary," +
-        "this option allows to speed-up output by writing multiple values at a time."
+        "Block size for binary output (number of 32 bits values)." +
+        "This option allows to speed-up output by writing multiple values at a time."
     ).default(1024)
 
   private val nbThreads by
