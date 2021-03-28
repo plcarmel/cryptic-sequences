@@ -1,7 +1,6 @@
 package net.plcarmel.crypticsequences.core.encryption.implementations
 
 import net.plcarmel.crypticsequences.core.encryption.definitions.NumberBasedEncryptionAlgo
-import net.plcarmel.crypticsequences.core.encryption.implementations.ShuffledCycleEncryptionAlgo.Companion.computeDefaultTableDimensions
 import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 import kotlin.random.Random
 
@@ -19,7 +18,7 @@ class MultiPassOverlapEncryptionAlgo(
     NumberBasedEncryptionAlgoFrom(
       baseSystem,
       MultiPassEncryptionAlgo(
-            OverlapEncryptionAlgo(wordSize, ShuffledCycleEncryptionAlgo(baseSystem, prng)),
+            OverlapEncryptionAlgoOptimized(wordSize, shuffledCycleEncryptionAlgo(baseSystem, prng)),
         nbPasses
       )
     )

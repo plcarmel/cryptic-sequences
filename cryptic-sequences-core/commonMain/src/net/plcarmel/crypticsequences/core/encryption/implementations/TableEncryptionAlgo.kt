@@ -16,11 +16,13 @@ import net.plcarmel.crypticsequences.core.numbers.BaseSystem
  *  the base, because using a small number of digits with a small base will result in an extremely small effective
  *  key size.
  */
-open class TableEncryptionAlgo(
+class TableEncryptionAlgo(
   override val wordSize: Int,
   override val baseSystem: BaseSystem,
-  private val table: IntArray
+  val table: IntArray
 ) : NumberBasedEncryptionAlgo {
+
+  val base = baseSystem.base
 
   override fun encrypt(word: ByteArray, at: Int) {
     baseSystem

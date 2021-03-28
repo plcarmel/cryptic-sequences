@@ -1,5 +1,6 @@
 package net.plcarmel.crypticsequences.core.encryption.implementations
 
+/*
 import net.plcarmel.crypticsequences.core.encryption.definitions.EncryptionAlgo
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -22,7 +23,7 @@ class OverlapEncryptionAlgoTest {
     at2: Int?,
     at3: Int?,
   ) {
-    val baseAlgo = mock(EncryptionAlgo::class.java)
+    val baseAlgo = mock(TableEncryptionAlgo::class.java)
     `when`(baseAlgo.wordSize).thenReturn(2)
     val bytes = input.toByteArray()
     val tokenArray = ByteArray(0)
@@ -34,3 +35,4 @@ class OverlapEncryptionAlgoTest {
   }
 
 }
+*/
