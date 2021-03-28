@@ -47,7 +47,7 @@ open class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser)
     ).forEach(output::write)
   }
 
-  open val task
+  open val task: (PlatformSpecificLayer) -> Unit
     get() = if (byteCount == null ) ::printTextNumbers else ::writeBinaryBlocks
 
   private val output by
@@ -59,7 +59,7 @@ open class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser)
       "File where to write the data. The standard output is used otherwise."
     )
 
-  protected val byteCount by
+  private val byteCount by
     parser.option(
         ArgType.Int,
       fullName = "byte-count",
@@ -71,7 +71,7 @@ open class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser)
       ArgType.Int,
       fullName = "block-size",
       description =
-        "Block size in values (not in bytes). When option \"byte-count\" is present and output is binary,\n" +
+        "Block size in values (not in bytes). When option \"byte-count\" is present and output is binary," +
         "this option allows to speed-up output by writing multiple values at a time."
     ).default(1024)
 

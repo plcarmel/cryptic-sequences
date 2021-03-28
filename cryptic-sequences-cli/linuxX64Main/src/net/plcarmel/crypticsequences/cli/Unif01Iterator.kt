@@ -12,11 +12,25 @@ class Unif01Iterator(
   wordSize: Int
 ): Iterator<Double> {
 
-  private val n = (baseSystem.nbValues(wordSize)-1).toDouble()
+  private val nbValues = baseSystem.nbValues(wordSize)
+  private val bitQueue = BitQueueTwoLongs()
 
-  override fun hasNext() = baseIterator.hasNext()
+  private fun replenishBitQueue() {
+    while (bitQueue.size < 53 && baseIterator.hasNext()) {
+      bitQueue.addRandomBitsFromNumber(baseIterator.next(), nbValues)
+      // bitQueue.put(baseIterator.next(), 56)
+    }
+  }
 
-  override fun next(): Double = baseIterator.next().toDouble() / n
+  override fun hasNext(): Boolean {
+    if (bitQueue.size < 53) replenishBitQueue()
+    return bitQueue.size >= 53
+  }
+
+  override fun next(): Double {
+    hasNext()
+    return minDouble * bitQueue.get(53)
+  }
 
   fun toTestU01Gen() : CPointer<unif01_Gen> {
     globalVarIter = this
@@ -28,6 +42,7 @@ class Unif01Iterator(
 
   @ThreadLocal
   companion object {
+    const val minDouble = 1.1102230246251565E-16
     var globalVarIter: Unif01Iterator? = null
   }
 
