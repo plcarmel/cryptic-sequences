@@ -13,7 +13,7 @@ open class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser)
   private fun createIterator(
     concurrencyLayer: ConcurrencyLayer,
     algo: NumberBasedEncryptionAlgo
-  ): Iterator<Long> =
+  ): ParallelizedCrypticSequenceIterator =
     ParallelizedCrypticSequenceIterator(
       algo,
       startAt = start.toLong(),
@@ -22,7 +22,7 @@ open class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser)
       nbThreads = nbThreads ?: 1
     )
 
-  protected fun createIterator(concurrencyLayer: ConcurrencyLayer): Iterator<Long> =
+  protected fun createIterator(concurrencyLayer: ConcurrencyLayer): ParallelizedCrypticSequenceIterator =
     createIterator(concurrencyLayer, createAlgo())
 
   private fun openOutput(outputLayer: OutputLayer) =
@@ -32,10 +32,15 @@ open class OptionsWithAdvancedIo(parser: ArgParser) : OptionsWithBasicIo(parser)
     val output = openOutput(platformSpecificLayer.output)
     val representationSystem = representationSystem
     val wordSize = this.size
-    createIterator(platformSpecificLayer.concurrency)
+    val iterator = createIterator(platformSpecificLayer.concurrency)
+    try {
+    iterator
       .asSequence()
       .map { representationSystem.format(wordSize, it) }
       .forEach(output::println)
+    } finally {
+      iterator.destroy()
+    }
   }
 
   private fun writeBinaryBlocks(platformSpecificLayer: PlatformSpecificLayer) {

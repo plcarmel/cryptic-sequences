@@ -6,7 +6,6 @@ import kotlinx.cinterop.staticCFunction
 import kotlinx.cinterop.toCValues
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
-import net.plcarmel.crypticsequences.core.concurrency.ConcurrencyLayer
 import net.plcarmel.crypticsequences.core.sequences.CrypticDoubleIterator
 import testu01.*
 
@@ -45,17 +44,20 @@ class OptionsWithTestU01(val args: Array<String>, parser: ArgParser) : OptionsWi
     )!!
   }
 
-  private fun createUnif01Generator(concurrencyLayer: ConcurrencyLayer) =
-    CrypticDoubleIterator(createIterator(concurrencyLayer), baseSystem, size).toTestU01Gen()
+  private fun createUnif01Generator(iterator: Iterator<Long>) =
+    CrypticDoubleIterator(iterator, baseSystem, size).toTestU01Gen()
 
-  private fun timeCypherTask(layer: PlatformSpecificLayer) =
-      unif01_TimerSumGenWr(createUnif01Generator(layer.concurrency), time!!.toLong(),1)
+  private fun timeCypherTask(layer: PlatformSpecificLayer) {
+      val iterator = createIterator(layer.concurrency)
+      try { unif01_TimerSumGenWr(createUnif01Generator(iterator), time!!.toLong(),1) }
+      finally { iterator.destroy() }
+  }
 
-  private fun testTask(layer: PlatformSpecificLayer) =
-    layer
-        .let(PlatformSpecificLayer::concurrency)
-        .let(this::createUnif01Generator)
-        .let { test!!.exec(it) }
+  private fun testTask(layer: PlatformSpecificLayer) {
+    val iterator = createIterator(layer.concurrency)
+    try { test!!.exec(createUnif01Generator(iterator)) }
+    finally { iterator.destroy() }
+  }
 
   override val task: (PlatformSpecificLayer) -> Unit
     get() =

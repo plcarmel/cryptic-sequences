@@ -45,13 +45,13 @@ class ParallelizedCrypticSequenceIterator(
           val baseSystem = encryptionAlgo.baseSystem
           val wordSize = encryptionAlgo.wordSize
           val bytes = ByteArray(size = wordSize)
-          concurrencyLayer.freeze(
-            range.asSequence().map {
-              baseSystem.extractDigitsAt(bytes, it, 0, encryptionAlgo.wordSize)
-              encryptionAlgo.encrypt(bytes)
-              baseSystem.combineDigitsFrom(bytes)
-            }.toList().toLongArray()
-          )
+          val result = LongArray((range.last+1 - range.first).toInt())
+          for (j in range.first .. range.last) {
+            baseSystem.extractDigitsAt(bytes, j, 0, wordSize)
+            encryptionAlgo.encrypt(bytes)
+            result[(j-range.first).toInt()] = baseSystem.combineDigitsFrom(bytes)
+          }
+          concurrencyLayer.freeze(result)
         }
       } else concurrencyLayer.futureOf(longArrayOf())
   }
@@ -83,9 +83,6 @@ class ParallelizedCrypticSequenceIterator(
     }
     val result = currentBlocks[currentBlock][currentBlockIndex++]
     count--
-    if (!hasNext()) {
-      destroy()
-    }
     return result
   }
 
