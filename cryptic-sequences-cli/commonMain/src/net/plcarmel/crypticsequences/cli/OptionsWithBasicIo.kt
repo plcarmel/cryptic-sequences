@@ -35,7 +35,7 @@ open class OptionsWithBasicIo(parser: ArgParser) {
         ArgType.String,
       fullName = "key",
       description =
-        "The 48 bits key to use to encrypt the sequence, in base 64 (up to 6 digits)."
+        "The (up to) 64 bits key to use to encrypt the sequence, in base 16."
     ).default("")
 
   protected val start by
@@ -71,7 +71,7 @@ open class OptionsWithBasicIo(parser: ArgParser) {
     get() = count?.toLong() ?: baseSystem.nbValues(size)
 
   protected fun createAlgo(): NumberBasedEncryptionAlgo {
-    val random = Random(NumberRepresentationSystem.mime64.parseToLong(key))
+    val random = Random(NumberRepresentationSystem.hexadecimal.parseToLong(key.toUpperCase()))
     return MultiPassOverlapEncryptionAlgo(
       baseSystem = baseSystem,
       wordSize = size,
