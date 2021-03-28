@@ -1,6 +1,5 @@
 package net.plcarmel.crypticsequences.core.encryption.implementations
 
-/*
 import net.plcarmel.crypticsequences.core.numbers.BaseSystem
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -73,4 +72,3 @@ class TableEncryptionAlgoTest {
   }
 
 }
-*/

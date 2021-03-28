@@ -9,6 +9,9 @@ import net.plcarmel.crypticsequences.core.encryption.definitions.EncryptionAlgo
  *
  * Note: Please do NOT use this to encrypt sensitive data as this is not a real vetted encryption algorithm !
  *
+ * @param wordSize
+ *  the number of digits of each generated number
+ *
  * @param baseEncryption
  *  the base encryption that will be applied repetitively throughout the word
  *
