@@ -1,13 +1,17 @@
 package net.plcarmel.crypticsequences.cli
 
+import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CValuesRef
+import kotlinx.cinterop.staticCFunction
+import kotlinx.cinterop.toCValues
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import net.plcarmel.crypticsequences.core.concurrency.ConcurrencyLayer
+import net.plcarmel.crypticsequences.core.sequences.CrypticDoubleIterator
 import testu01.*
 
 @Suppress("unused")
-class OptionsWithTestU01(parser: ArgParser) : OptionsWithAdvancedIo(parser) {
+class OptionsWithTestU01(val args: Array<String>, parser: ArgParser) : OptionsWithAdvancedIo(parser) {
 
   private enum class U01Test(val exec: (CValuesRef<unif01_Gen>) -> Unit) {
     SMALL_CRUSH(::bbattery_SmallCrush),
@@ -28,8 +32,21 @@ class OptionsWithTestU01(parser: ArgParser) : OptionsWithAdvancedIo(parser) {
     description = "Measure the performance of the cypher"
   )
 
+  @ThreadLocal
+  companion object {
+    var globalVarIter: CrypticDoubleIterator? = null
+  }
+
+  private fun CrypticDoubleIterator.toTestU01Gen() : CPointer<unif01_Gen> {
+    globalVarIter = this
+    return unif01_CreateExternGen01(
+      sequenceOf(*args).joinToString(" ").encodeToByteArray().toCValues(),
+      staticCFunction<Double> { globalVarIter!!.next() }
+    )!!
+  }
+
   private fun createUnif01Generator(concurrencyLayer: ConcurrencyLayer) =
-    Unif01Iterator(createIterator(concurrencyLayer), baseSystem, size).toTestU01Gen()
+    CrypticDoubleIterator(createIterator(concurrencyLayer), baseSystem, size).toTestU01Gen()
 
   private fun timeCypherTask(layer: PlatformSpecificLayer) =
       unif01_TimerSumGenWr(createUnif01Generator(layer.concurrency), 1000000,1)

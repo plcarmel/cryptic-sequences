@@ -1,5 +1,6 @@
 package net.plcarmel.crypticsequences.cli
 
+import net.plcarmel.crypticsequences.core.bits.BitQueueTwoLongs
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

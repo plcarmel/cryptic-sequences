@@ -1,4 +1,4 @@
-package net.plcarmel.crypticsequences.cli
+package net.plcarmel.crypticsequences.core.bits
 
 interface BitQueue {
 
