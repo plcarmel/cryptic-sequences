@@ -28,8 +28,8 @@ class OptionsWithTestU01(val args: Array<String>, parser: ArgParser) : OptionsWi
     )
 
   private val time by parser.option(
-    ArgType.Boolean, "time",
-    description = "Measure the performance of the cypher"
+    ArgType.Int, "time",
+    description = "Measure the performance of the cypher. Takes the number of values to generate in parameter."
   )
 
   @ThreadLocal
@@ -49,7 +49,7 @@ class OptionsWithTestU01(val args: Array<String>, parser: ArgParser) : OptionsWi
     CrypticDoubleIterator(createIterator(concurrencyLayer), baseSystem, size).toTestU01Gen()
 
   private fun timeCypherTask(layer: PlatformSpecificLayer) =
-      unif01_TimerSumGenWr(createUnif01Generator(layer.concurrency), 1000000,1)
+      unif01_TimerSumGenWr(createUnif01Generator(layer.concurrency), time!!.toLong(),1)
 
   private fun testTask(layer: PlatformSpecificLayer) =
     layer

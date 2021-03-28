@@ -9,7 +9,7 @@ class ParallelizedCrypticSequenceIterator(
   private var count: Long = encryptionAlgo.baseSystem.nbValues(encryptionAlgo.wordSize),
   private var concurrencyLayer: ConcurrencyLayer,
   nbThreads: Int = 1,
-  private val bufferSize: Int = 65536
+  private val bufferSize: Int = 1 shl 12
 ) : Iterator<Long> {
 
   private val indices = (0 until nbThreads)
@@ -69,7 +69,6 @@ class ParallelizedCrypticSequenceIterator(
   private fun nextBlock() {
     currentBlock++
     currentBlockIndex = 0
-
   }
 
   override fun next(): Long {
