@@ -28,9 +28,7 @@ kotlin {
           jvmTarget = "11"
         }
       }
-
     }
-
   }
 
   subprojects {

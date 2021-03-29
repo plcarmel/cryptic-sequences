@@ -68,6 +68,7 @@ kotlin {
         implementation(kotlin("stdlib-jdk8"))
       }
     }
+    @Suppress("UNUSED_VARIABLE")
     val jvmTest by getting {
       val jupiterVersion = "5.7.1"
       val mockitoVersion = "3.8.0"
@@ -98,27 +99,43 @@ kotlin {
     }
   }
 
-  task<ShadowJar>(name="shadowJar") {
-    val jvmJar = tasks.withType<org.gradle.jvm.tasks.Jar>().named("jvmJar").get()
-    dependsOn(jvmJar)
-    from(jvmJar.archiveFile)
-    archiveClassifier.set("shadow")
-    configurations.add(project.configurations.named("jvmRuntimeClasspath").get())
-    manifest {
-      attributes("Main-Class" to "net.plcarmel.crypticsequences.cli.JavaMainKt")
+  tasks {
+
+    val shadowJar = task<ShadowJar>("shadowJar")
+
+    named("build") {
+      dependsOn(shadowJar)
+    }
+
+    shadowJar.apply {
+      val jvmJar = named<org.gradle.jvm.tasks.Jar>("jvmJar").get()
+      from(jvmJar.archiveFile)
+      archiveClassifier.set("shadow")
+      configurations.add(project.configurations.named("jvmRuntimeClasspath").get())
+      manifest {
+        attributes("Main-Class" to "net.plcarmel.crypticsequences.cli.JavaMainKt")
+      }
+    }
+
+    named<Test>("jvmTest") {
+      useJUnitPlatform()
+      testLogging {
+        showExceptions = true
+        showStandardStreams = true
+        events = setOf(
+          org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+          org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
+        )
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+      }
     }
   }
 
-  tasks.named<Test>("jvmTest") {
-    useJUnitPlatform()
-    testLogging {
-      showExceptions = true
-      showStandardStreams = true
-      events = setOf(
-        org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
-        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
-      )
-      exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+  publishing {
+    publications {
+      named<MavenPublication>("jvm") {
+        artifact(tasks.named("shadowJar"))
+      }
     }
   }
 }
