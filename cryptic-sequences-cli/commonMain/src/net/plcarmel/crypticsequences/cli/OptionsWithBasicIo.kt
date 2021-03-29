@@ -10,6 +10,7 @@ import net.plcarmel.crypticsequences.core.numbers.BinaryBaseSystem
 import net.plcarmel.crypticsequences.core.numbers.GenericBaseSystem
 import net.plcarmel.crypticsequences.core.numbers.NumberRepresentationSystem
 import net.plcarmel.crypticsequences.core.sequences.CrypticIterator
+import kotlin.math.ceil
 import kotlin.random.Random
 
 open class OptionsWithBasicIo(parser: ArgParser) {
@@ -51,15 +52,15 @@ open class OptionsWithBasicIo(parser: ArgParser) {
         ArgType.Int,
       fullName = "strength",
       description =
-        "Controls the number of time the encryption algorithm is applied"
-    ).default(10)
+        "Controls the number of time the encryption algorithm is applied. Default to 1.5 * size."
+    )
 
   private val count by
     parser.option(
         ArgType.Int,
       fullName = "count",
       description =
-        "The number of generated values."
+        "The number of values to generate."
     )
 
   protected val baseSystem: BaseSystem
@@ -76,7 +77,7 @@ open class OptionsWithBasicIo(parser: ArgParser) {
       baseSystem = baseSystem,
       wordSize = size,
       prng = random,
-      nbPasses = strength,
+      nbPasses = ceil(1.5 * size).toInt(),
     )
   }
 

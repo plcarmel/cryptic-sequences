@@ -10,17 +10,21 @@ class MultiPassOverlapEncryptionAlgo(
   baseSystem: BaseSystem,
   prng: Random,
   overlapAlgoFactory: (wordSize: Int, TableEncryptionAlgo) -> EncryptionAlgo = ::OverlapEncryptionAlgoOptimized,
-  nbPasses: Int = 10
+  nbPasses: Int
 )
   : NumberBasedEncryptionAlgo
 
-  by if (wordSize <= computeDefaultTableDimensions(baseSystem))
-    ShuffledTableEncryptionAlgo(wordSize, baseSystem, prng)
-  else
-    NumberBasedEncryptionAlgoFrom(
-      baseSystem,
-      MultiPassEncryptionAlgo(
-            overlapAlgoFactory(wordSize, shuffledCycleEncryptionAlgo(baseSystem, prng)),
-        nbPasses
+  by when {
+    nbPasses == 0 ->
+      NumberBasedEncryptionAlgoFrom(baseSystem, IdentityEncryptionAlgo(wordSize))
+    wordSize <= computeDefaultTableDimensions(baseSystem) ->
+      ShuffledTableEncryptionAlgo(wordSize, baseSystem, prng)
+    else ->
+      NumberBasedEncryptionAlgoFrom(
+        baseSystem,
+        MultiPassEncryptionAlgo(
+              overlapAlgoFactory(wordSize, shuffledCycleEncryptionAlgo(baseSystem, prng)),
+          nbPasses
+        )
       )
-    )
+  }
