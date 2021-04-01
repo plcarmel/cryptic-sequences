@@ -403,11 +403,29 @@ number generator since it is around two orders of magnitude slower that a typica
 
 ## Other resources
 
+### Existing cyphers
+
+### The FFX Mode of Operation for Format-Preserving Encryption
+
+Authors: Mihir Bellare, Phillip Rogaway, Terence Spies
+
+A method is presented that allows to construct a family of algorithms to encrypt data while
+preserving its format, which is pretty much what the current project has achieved. The main
+difference is that they are very much focused on providing a strong encryption that can be relied
+upon, and their algorithm is a Feistel cypher, a cypher for which there are mathematical proofs
+of its validity.
+
+An implementation of their work would be a nice addition to the current library and it will
+be interesting to compare it to its main algorithm.
+
+[FFX paper](https://csrc.nist.gov/csrc/media/projects/block-cipher-techniques/documents/bcm/proposed-modes/ffx/ffx-spec.pdf)
+
 ### Other pseudo-random number generators that generate unique results
 
 There are a number of other pseudo-random number generators out there that produce
 unique numbers, sometimes as an undesired side effect. They are much faster algorithms
 than what was exposed here. However, they do not offer the same flexibility.
+
 
 #### SplittableRandom
 SplittableRandom is a random number generator that has been introduced with Java 8. It has been
